@@ -1,3 +1,8 @@
+---
+defaults: github-markdown
+toc: false
+---
+<!-- *********************************************************************** -->
 # matrixxx-os-build
 - This repository is primarily a shell script collection to generate a
   customized os for matrixxx (a D.I.Y linux live system)
@@ -9,16 +14,20 @@
 - The result are several squasfs images which contains a customized os
   for x86 32-bit and 64-bit versions
 
-## briefly about the matrixxx project:
-- see [readme: matrixxx.md](./doc/readme-matrixxx.md)
-
-## briefly about the kernel-build process and usage:
-- see [readme: kernel-build process](./doc/readme-process.md)
-- see [readme: usage](./doc/readme-usage.md)
+#### briefly:
+- see [readme: about][]
+<!--
+- see [readme: process][]
+- see [readme: usage][]
+-->
 
 #### links:
 - home page of [debian.org][debian]
 
 <!-- *********************************************************************** -->
 [debian]: https://www.debian.org
+
+[readme: about]: doc/readme-matrixxx.md
+[readme: process]: doc/readme-process.md
+[readme: usage]: doc/readme-usage.md
 

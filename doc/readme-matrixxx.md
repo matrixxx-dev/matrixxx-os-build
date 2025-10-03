@@ -1,3 +1,8 @@
+---
+defaults: github-markdown
+toc: false
+---
+<!-- *********************************************************************** -->
 # matrixxx project
 - a D.I.Y live system based on shell scripts
 - primarily for use on a USB stick (or similar)
@@ -29,10 +34,7 @@ Scripts for generating:
    - contains a customized busybox which is based on version v1.37.0
    - contains a init script which
       - has an exit ("hook") as early as possible to easily try out adjustments
-      - allows various CHEATCODES via kernel parameter (bootloader)
-         - allows you to select the union mount file system
-            - "aufs" (default) or "OverlayFS"
-         - ...
+      - allows various cheat codes via kernel parameter (bootloader)
 - *note:* the read-only images (for union mount) of the operating system are of
   type "squashfs" ("cloop" integration is planned)
 
