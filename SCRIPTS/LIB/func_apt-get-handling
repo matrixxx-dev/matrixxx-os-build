@@ -1,0 +1,200 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## Several helpful functions - apt-get handling:
+##
+## ########################################################################## ##
+## apt-get: -q                        still (--quiet)
+##          -y                        automatisches »Ja« auf Anfragen
+##          --no-install-recommends   installiere empfohlene Pakete nicht
+##          --auto-remove             entfernen nicht mehr benötigten Pakete
+##          -o                        eine Konfigurationsoption setzen
+##              Acquire::Retries=3
+## ########################################################################## ##
+## TODO:
+## - --force-confdef and --force-confold for upgrade resp. dist-upgrade?
+## - Acquire::http::AllowRedirect=false?
+## ########################################################################## ##
+export FUNC_APT_GET_HANDLING="true"
+
+CMD="-q -y --no-install-recommends --auto-remove "
+CMD="${CMD} -o DPkg::options::=\"--force-confdef\""
+CMD="${CMD} -o DPkg::options::=\"--force-confold\""
+CONFIG_CMD_INSTALL="${CMD} -o Acquire::Retries=3"
+CONFIG_CMD_INSTALL_PREFIX="DEBIAN_FRONTEND=noninteractive"
+
+#CLEAN_AFTER_INSTALL="true"
+
+## -------------------------------------------------------------------------- ##
+## FUNCTIONS:
+## -------------------------------------------------------------------------- ##
+
+## delete package cache [apt-get clean] and the package list files
+## re-reads all package sources [apt-get update]
+## and remove redundant dependencies [apt-get autoremove]
+func_clean_up_update_autoremove(){
+  func_apt_get_clean
+  func_delete_package_lists
+  func_apt_get_update
+  func_apt_get_autoremove
+}
+
+## delete package cache [apt-get clean] and the package list files
+## re-reads all package sources [apt-get update]
+func_clean_up_update_package_lists(){
+  func_apt_get_clean
+  func_delete_package_lists
+  func_apt_get_update
+}
+
+## delete package cache [apt-get clean] and the package list files
+func_clean_up_package_lists(){
+  func_apt_get_clean
+  func_delete_package_lists
+}
+
+## delete package cache [apt-get clean]
+func_clean_up_package_cache(){
+  func_apt_get_clean
+}
+
+## remove redundant dependencies [apt-get autoremove]
+func_remove_redundant_dependencies(){
+  func_apt_get_autoremove
+}
+
+## overwritable function [apt-get <command> package]
+func_apt_get_package(){ # ${package}
+  func_apt_get_install "$1"
+}
+
+## -------------------------------------------------------------------------- ##
+## command 'update'
+## Used to re-synchronize the package index files from their sources
+## [/etc/apt/sources.list resp. /etc/apt/sources.list.d/]
+func_apt_get_update(){
+  func_cmd_response "apt-get update"
+}
+
+## command 'upgrade'
+## Used to install the newest versions of all packages currently installed
+## on the system
+func_apt_get_upgrade(){
+  func_cmd_response "apt-get --assume-yes upgrade"
+}
+
+## command 'dist-upgrade'
+## In addition to performing the function of upgrade, this option also
+## intelligently handles changing dependencies with new versions of packages
+func_apt_get_dist_upgrade(){
+  func_cmd_response "apt-get --assume-yes dist-upgrade"
+}
+
+## command 'autoremove'
+## uninstalls obsolete packages installed as dependencies
+func_apt_get_autoremove(){
+  func_cmd "apt-get --assume-yes --purge autoremove"
+}
+
+## command 'clean'
+## Clears out the package cache of retrieved package files
+## [ package cache in /var/cache/apt/archives/ ]
+func_apt_get_clean(){
+  func_cmd "apt-get clean"
+}
+
+## command 'autoclean'
+## Like clean, autoclean clears out the package cache of retrieved
+## package files.
+## [ The difference is that it only removes package files that can no longer
+##   be downloaded, and are largely useless. ]
+func_apt_get_autoclean(){
+  func_cmd "apt-get autoclean"
+}
+
+## -------------------------------------------------------------------------- ##
+## command 'install'
+## The command is followed by one or more packages desired for installation
+## or upgrading.
+func_apt_get_install(){ # ${package}
+  local package cmd
+  package="$1"
+  cmd="${CONFIG_CMD_INSTALL_PREFIX} apt-get ${CONFIG_CMD_INSTALL} install ${package}"
+  func_cmd_response "${cmd}"
+  [ "${CLEAN_AFTER_INSTALL}" = "true" ] && func_apt_get_clean
+}
+
+## command 'remove'
+## The command is followed by one or more packages desired for uninstallation.
+## - Configuration files of the package are preserved
+func_apt_get_remove_package(){ # ${package}
+  local package="$1"
+  func_cmd_response "apt-get remove ${package}"
+}
+
+## command 'purge'
+## The command is followed by one or more packages desired for uninstallation.
+## and any configuration file are deleted too
+## 1. equivalent to 'remove' with --purge parameter
+## 2. deleting any configuration file after uninstalling package with 'remove'
+func_apt_get_purge_package(){ # ${package}
+  local package="$1"
+  func_cmd_response "apt-get purge ${package}"
+}
+
+## command 'download'
+## downloads the installation files of the specified package
+## to the current directory.
+func_apt_get_download_package(){ # ${package}
+  local package="$1"
+  func_cmd_response "apt-get download ${package}"
+}
+
+## command 'install' option '--download-only'
+## downloads the installation files of the specified package
+## to /var/cache/apt/archives/ folder.
+func_apt_get_install_download_only_package(){ # ${package}
+  local package options
+  package="$1"
+  ## note:
+  ## --assume-yes    => -y
+  ## --download-only => -d
+  options="--assume-yes --reinstall --download-only"
+  cmd="apt-get ${options} install ${package}"
+  func_cmd_response "${cmd}"
+}
+
+## option --fix-broken
+## Attempt to correct a system with broken dependencies in place.
+## This option, when used with install/remove, can omit any packages to
+## permit APT to deduce a likely solution
+func_apt_get_fix_broken_packages(){
+  func_cmd_response "apt-get --fix-broken remove"
+  ## or func_cmd "apt-get --fix-broken install"
+}
+
+## Packages can be reconfigured with this command
+func_dpkg_reconfigure_package(){ # ${package}
+  local package="$1"
+  func_cmd_response "dpkg-reconfigure ${package}"
+}
+
+## -------------------------------------------------------------------------- ##
+## delete package list files
+func_delete_package_lists(){
+  func_cmd "rm -rf /var/lib/apt/lists/*"
+}
+
+## collect some information
+func_save_dpkg_list(){ #filepath name
+  local file
+  file="$1/$2-dpkg-l.txt"
+  func_cmd "dpkg -l > ${file}"
+}
+
+## determine occupied memory
+func_check_log_files(){
+  func_cmd "du -h /var/log"
+}
+
+## ########################################################################## ##

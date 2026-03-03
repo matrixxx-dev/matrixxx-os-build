@@ -1,0 +1,87 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## functions for virtual device handling:
+##
+## ########################################################################## ##
+export FUNC_VIRTUAL_DEVICE_HANDLING="true"
+
+source ./lib/func_qcow2-handling
+
+## definitions & initializations
+[ -z "${MOUNT_DIR}" ] && MOUNT_DIR="mnt"
+
+## -------------------------------------------------------------------------- ##
+## FUNCTIONS:
+## -------------------------------------------------------------------------- ##
+## mount a virtual device set
+func_mount_virtual_devices(){ # base_dir="$1"
+  local base_dir image
+  base_dir="$1"; base_dir="${base_dir:=.}"
+  for image in "${IMAGE_ARRAY[@]}"; do
+    [ -f "${base_dir}/${image}" ] \
+      && func_mount_virtual_device "${base_dir}/${image}"
+  done
+}
+
+## unmount a virtual device set
+func_umount_virtual_devices(){ # base_dir
+  local base_dir image_array image mountpoint
+  base_dir="$1"; base_dir="${base_dir:=.}"
+  readarray -t image_array < <(ls "${base_dir}/${MOUNT_DIR}" 2>/dev/null)
+  for image in "${image_array[@]}"; do
+    echo "${image}"
+    [ -f "${base_dir}/${image}" ] \
+      && func_umount_virtual_device "${base_dir}/${image}"
+  done
+}
+
+## -------------------------------------------------------------------------- ##
+## mount a virtual device
+func_mount_virtual_device(){ # image
+  local image mountpoint
+  image="$1"
+  mountpoint="$(dirname "$1")/${MOUNT_DIR}/$(basename "$1")"
+
+  if [ -f "${image}" ]; then
+    if file "${image}" | grep -i 'qcow'; then
+      func_qcow2_mount "0" "${image}" # index image
+      return 0
+    else
+      echo "=> Mount ${image} on ${mountpoint}"
+      [ -d "${mountpoint}" ] || mkdir -p "${mountpoint}"
+      sudo mount -o loop "${image}" "${mountpoint}"
+      return 0
+    fi
+  else
+    echo "!!! ${image} does not exists !!!"
+    return 1
+  fi
+}
+
+## unmount a virtual device
+func_umount_virtual_device(){ # image
+  local image mountpoint_dir mountpoint
+  image="$1"
+  mountpoint_dir="$(dirname "$1")/${MOUNT_DIR}"
+  mountpoint="${mountpoint_dir}/$(basename "$1")"
+
+  echo "=> Unmount ${mountpoint}"
+  if mountpoint -q "${mountpoint}"; then
+    sudo umount "${mountpoint}"
+  fi
+  rm -rf "${mountpoint}"
+
+  if [ -d "${mountpoint_dir}" ]; then
+    if [ -z "$(ls -A "${mountpoint_dir}")" ]; then
+      echo "=> Remove ${mountpoint_dir}"
+      rm -rf "${mountpoint_dir}"
+    fi
+  fi
+
+  if file "${image}" | grep -i 'qcow'; then
+    func_ndb_disconnect "0"  # index
+  fi
+}
+
+## ########################################################################## ##

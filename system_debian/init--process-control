@@ -1,0 +1,37 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## Creation of overlay files
+## note: multiple calls possible
+##
+## ########################################################################## ##
+
+## globals: process control (PC) configurations
+DIR_to_TARGZ="5"
+TARGZ_to_DIR="6"
+
+## -------------------------------------------------------------------------- ##
+## FUNCTIONS:
+## -------------------------------------------------------------------------- ##
+## process control (see below):
+func_process_control(){ # process_control="$1"
+  local process_control
+  process_control="$1"
+
+  if [ "${process_control}" = "${TARGZ_to_DIR}" ]; then
+    LIST_DIR_NO_ARRAY=(
+    "${BASE_SYSTEM}"
+    )
+  elif [ "${process_control}" = "${DIR_to_TARGZ}" ]; then
+    LIST_DIR_NO_ARRAY=(
+    "${BASE_SYSTEM}"
+    )
+  else
+    echo "No subdirectory was selected!!!";
+    echo "Press enter to continue..."; read -r;
+    exit 1
+  fi
+}
+
+## ########################################################################## ##
+

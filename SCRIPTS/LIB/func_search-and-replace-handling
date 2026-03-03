@@ -1,0 +1,28 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## use perl for "search and replace"
+##
+## ########################################################################## ##
+export FUNC_SEARCH_AND_REPLACE_HANDLING="true"
+
+## -------------------------------------------------------------------------- ##
+## FUNCTIONS:
+## -------------------------------------------------------------------------- ##
+func_perl_search_and_replace(){ # ${file_list} ${search_pattern} ${replace_pattern}
+
+  ## note: perl one liner: Search and replace in files
+  ##       perl -p -i.bak -e "~s|search|replace|" file1.txt file2.txt file3.txt
+  local file_list search_pattern replace_pattern
+  file_list="$1"  ## ="datei1.txt datei2.txt datei3.txt ..."
+  search_pattern="$2"
+  replace_pattern="$3"
+  if [ "${FUNC_SCRIPT_LOGGING_HANDLING}" = "true" ]; then
+    func_cmd "perl -p -i.bak -e \"~s|${search_pattern}|${replace_pattern}|\" ${file_list}"
+  else
+    perl -p -i.bak -e "~s|${search_pattern}|${replace_pattern}|" "${file_list}"
+  fi
+}
+
+## ########################################################################## ##
+

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## overwriting function(s) - apt-get handling:
+##
+## ########################################################################## ##
+export FUNC_APT_GET_DOWNLOAD_HANDLING="true"
+
+## overwrite func_apt_get_package
+func_apt_get_package(){ # ${package}
+  local package pkg_source pkg_dest
+  package="$1"
+  pkg_source="/var/cache/apt/archives"
+  pkg_dest="/info/download/${package}"
+  func_apt_get_install_download_only_package "${package}"
+  [ -d "${pkg_dest}" ] || mkdir -p "${pkg_dest}"
+  mv "${pkg_source}"/*.deb "${pkg_dest}"/
+}
+

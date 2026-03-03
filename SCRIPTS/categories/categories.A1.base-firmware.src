@@ -1,0 +1,68 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## Debian firmware packages:
+## [non-free-firmware] - exceptions [main], [contrib]
+##
+## ########################################################################## ##
+myCLASS_DIR=(
+"NON_FREE_FIRMWARE"
+"FIRMWARE_CONTRIB"
+"FIRMWARE"
+)
+
+myPACKAGE_LIST_NON_FREE_FIRMWARE=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+amd64-microcode                             # Platform firmware and microcode for AMD CPUs and SoCs
+atmel-firmware                              # Firmware for Atmel at76c50x wireless networking chips.
+bluez-firmware                              # Firmware for Bluetooth devices
+dahdi-firmware-nonfree                      # DAHDI non-free firmware
+firmware-amd-graphics                       # Binary firmware for AMD/ATI graphics chips
+firmware-ast                                # Binary firmware for ASpeed Technologies graphics chips
+firmware-atheros                            # Binary firmware for Qualcomm Atheros wireless cards
+firmware-bnx2                               # Binary firmware for Broadcom NetXtremeII
+firmware-bnx2x                              # Binary firmware for Broadcom NetXtreme II 10Gb
+firmware-brcm80211                          # Binary firmware for Broadcom/Cypress 802.11 wireless cards
+firmware-cavium                             # Binary firmware for Cavium Ethernet adapters
+firmware-intel-sound                        # Binary firmware for Intel sound DSPs
+## firmware-ipw2x00 only download - interactiv installation
+#firmware-ipw2x00                            # Binary firmware for Intel Pro Wireless 2100, 2200 and 2915
+firmware-iwlwifi                            # Binary firmware for Intel Wireless cards
+## firmware-ivtv - only download - interactiv installation
+#firmware-ivtv                               # Binary firmware for iTVC15-family MPEG codecs (ivtv and pvrusb2 drivers)
+firmware-libertas                           # Binary firmware for Marvell wireless cards
+firmware-misc-nonfree                       # Binary firmware for various drivers in the Linux kernel
+firmware-myricom                            # Binary firmware for Myri-10G Ethernet adapters
+firmware-netronome                          # Binary firmware for Netronome network adapters
+firmware-netxen                             # Binary firmware for QLogic Intelligent Ethernet (3000 and 3100 Series)
+firmware-nvidia-graphics                    # Binary firmware for Nvidia GPU chips
+## firmware-nvidia-gsp & firmware-nvidia-tesla-gsp - only 64bit
+#firmware-nvidia-gsp                         # NVIDIA GSP firmware                     "AMD64_FIRMWARE"
+#firmware-nvidia-tesla-gsp                   # NVIDIA GSP firmware (Tesla version)     "AMD64_FIRMWARE"
+firmware-qcom-soc                           # Binary firmware for Qualcomm SoCs
+firmware-qlogic                             # Binary firmware for QLogic HBAs
+firmware-realtek                            # Binary firmware for Realtek wired/wifi/BT adapters
+firmware-samsung                            # Binary firmware for Samsung MFC video codecs
+firmware-siano                              # Binary firmware for Siano MDTV receivers
+firmware-sof-signed                         # Intel SOF firmware - signed
+firmware-ti-connectivity                    # Binary firmware for TI Connectivity wifi and BT/FM/GPS adapters
+firmware-zd1211                             # binary firmware for the zd1211rw wireless driver
+intel-microcode                             # Processor microcode firmware for Intel CPUs
+)
+
+myPACKAGE_LIST_FIRMWARE_CONTRIB=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+firmware-b43-installer                      # firmware installer for the b43 driver (b43-fwcutter)
+firmware-b43legacy-installer                # firmware installer for the b43legacy driver (b43-fwcutter)
+)
+
+myPACKAGE_LIST_FIRMWARE=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+firmware-ath9k-htc                          # firmware for AR7010 and AR9271 USB wireless adapters
+firmware-linux-free                         # Binary firmware for various drivers in the Linux kernel
+)
+
+## ########################################################################## ##

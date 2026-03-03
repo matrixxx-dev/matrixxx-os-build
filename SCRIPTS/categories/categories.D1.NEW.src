@@ -1,0 +1,25 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## Debian packages:
+##
+## ########################################################################## ##
+myCLASS_DIR=(
+"INSTALL_NEW_01"
+)
+
+myPACKAGE_LIST_INSTALL_NEW_01=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+## Test: QR Code tools
+qtqr                                        # Qt frontend for QR code generator and decoder
+                                            # - zeigt Probleme beim Erkennen der Webcam
+qrencode                                    # Erzeugung von PNG-Bildern mit QR-Codes
+#
+## Test: systemtools
+tmux                                        # Terminal-Multiplexer
+tmate                                       # terminal multiplexer with instant terminal sharing
+#tmate-ssh-server                            # terminal multiplexer with instant terminal sharing -- server
+)
+
+## ########################################################################## ##

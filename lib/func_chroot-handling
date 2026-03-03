@@ -1,0 +1,59 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## chroot handling
+##
+## ########################################################################## ##
+export FUNC_CHROOT_HANDLING="true"
+
+## definitions & initializations
+TIME=1
+
+## -------------------------------------------------------------------------- ##
+## FUNCTIONS:
+## -------------------------------------------------------------------------- ##
+## call a script in chroot environment
+## note: func_chroot_call_script don't allow script parameters
+func_chroot_call_script(){ # union="$1"; script_name="$2"
+  local union script_name
+  union="$1"; script_name="$2"
+  if [ -x "${union}${script_name}" ]; then
+    func_chroot_cmd "${union}" "${script_name}" || return 1
+  fi
+}
+
+## call a cmd in chroot environment
+func_chroot_cmd(){ # union="$1"; cmd="$2"
+  local cmd
+  cmd="sudo chroot ${1} ${2}"
+  func_echo ""; func_echo "### ${cmd}"
+  eval "${cmd}" || return 1
+}
+
+## -------------------------------------------------------------------------- ##
+func_pre_process_chroot(){ # union="$1"
+  local union dir
+  union="${1}"
+
+  ## note: the postinst scripts of some packages may try to create
+  ##       device files, so this option should only be used with care
+  echo "=> Mount bind: /proc /sys /dev"
+  for dir in proc sys dev; do
+    [ -d "${union}/${dir}" ] || sudo mkdir "${union}/${dir}"
+    sudo mount -o bind /"${dir}" "${union}/${dir}"
+  done
+}
+
+func_post_process_chroot(){ # union="$1"
+  local union dir
+  union="${1}"
+
+  sleep ${TIME}
+  echo "=> Umount bind: /dev /sys /proc"
+  for dir in proc sys dev; do
+    sudo umount "${union}/${dir}"
+  done
+  sleep ${TIME}
+}
+
+## ########################################################################## ##

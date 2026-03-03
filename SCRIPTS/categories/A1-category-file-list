@@ -1,0 +1,12 @@
+#!/bin/bash
+
+## ########################################################################## ##
+CATEGORY_FILE_LIST=(
+"categories.A1.base-debootstrap.src"
+"categories.A1.base-firmware.src"
+"categories.A1.base-tasksel-desktop.src"
+"categories.A1.base-tasksel-lxde.src"
+"categories.A1.base.src"
+)
+
+## ########################################################################## ##

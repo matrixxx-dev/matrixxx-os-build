@@ -1,0 +1,194 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## Installing a Unix/Linux System
+##
+## ########################################################################## ##
+export FUNC_INSTALL_HANDLING="true"
+
+## -------------------------------------------------------------------------- ##
+## FUNCTIONS:
+## -------------------------------------------------------------------------- ##
+func_arch_process(){
+  local arch start
+
+  for arch in "${!ARCHITECTURE_ARRAY[@]}"
+  do
+    start=$(date +%s)
+    func_process "${arch}"
+    ARCHITECTURE_ARRAY["$arch"]=$(($(date +%s) - start))
+  done
+}
+
+## -------------------------------------------------------------------------- ##
+## create *.bak files from files that will be overwritten later. (upper layer)
+func_save_originals(){ # base_dir="$1"
+  local base_dir file_list file
+  base_dir="$1"
+  file_list="adjtime fstab hostname host locale.gen localtime mailname mtab
+             resolve.conf apt/sources.list"
+  ## files in /etc:
+  for file in ${file_list}
+  do
+    file="${base_dir}/etc/${file}"
+    [ -f "${file}" ] && sudo mv -f "${file}" "${file}.bak"
+  done
+}
+
+## -------------------------------------------------------------------------- ##
+## copy files from host to chroot environment to enable the installation
+## (upper layer)
+func_configure_system_INSTALLATION(){ # base_dir="$1"
+  local base_dir
+  base_dir="$1"
+
+  ## configure base system for installation
+  func_resolv_handling_INSTALLATION "${base_dir}"
+
+  ## copy necessary scripts and libs for chroot environment:
+  sudo cp -ax ./SCRIPTS/ "${base_dir}"/
+}
+
+## save chroot /etc/resolv.conf and copy host /etc/resolv.conf
+func_resolv_handling_INSTALLATION(){ # base_dir="$1"
+  local base_dir file
+  base_dir="$1"
+
+  ## configure base system for installation
+  file="${base_dir}/etc/resolv.conf"
+  #sudo mv -f "${file}" "${file}.bak"
+  sudo cp -ax /etc/resolv.conf "${file}"
+}
+
+## reset chroot environment on upper layer
+func_configure_system_USAGE(){  # target="$1"; base_dir="$2";
+  local target base_dir
+  target="$1"; base_dir="$2"
+
+  ## configure base system for usage
+  func_resolv_handling_USAGE "${base_dir}"
+
+  ## reset bash history file:
+  sudo rm -f "${base_dir}"/root/.bash_history
+
+  ## delete *.pid files from /run /var/run/
+  func_delete_files_from_dir_run "${base_dir}"
+
+  ## delete logging files
+  func_delete_logging_files "${base_dir}"
+
+  ## delete /SCRIPTS
+  sudo rm -rf "${base_dir}"/SCRIPTS
+
+  ## copy info directory
+  func_copy_info_directory "${target}" "${base_dir}"
+
+  ## delete /info/download
+  sudo rm -rf "${base_dir}"/info/download
+}
+
+## restore chroot /etc/resolv.conf
+func_resolv_handling_USAGE(){  # base_dir="$1"
+  local base_dir file
+  base_dir="$1"
+
+  ## configure base system for usage
+  file="${base_dir}/etc/resolv.conf"
+  #sudo mv -f "${file}.bak" "${file}"
+  rm -f "${file}"
+}
+
+## -------------------------------------------------------------------------- ##
+func_delete_files_from_dir_run(){ # base_dir="$1"
+  local base_dir
+  base_dir="$1"
+  #[ -d "${base_dir}"/run ] && {
+  #  sudo find "${base_dir}"/run -name \*pid -type f -exec rm -f {} \;
+  #}
+  #[ -d "${base_dir}"/var/run ] && {
+  #  sudo find "${base_dir}"/var/run -name \*pid -type f -exec rm -f {} \;
+  #}
+  sudo rm -rf "${base_dir}"/run/*
+}
+
+func_delete_logging_files(){ # base_dir="$1
+  local base_dir
+  base_dir="$1"
+  #sudo find "${base_dir}"/var/log -type f -exec rm -f {} \;
+  sudo rm -rf "${base_dir}"/var/log/*
+}
+
+## -------------------------------------------------------------------------- ##
+func_copy_info_directory(){ # target="$1"; base_dir="$2"
+  local target base_dir info_dir
+  target="$1"; base_dir="$2"
+  info_dir="${target}/info"
+
+  ## copy complete /info
+  [ -d "${info_dir}" ] || mkdir -p "${info_dir}"
+  cp -fax "${base_dir}"/info/* "${info_dir}"/
+}
+
+## -------------------------------------------------------------------------- ##
+func_process_call_scripts(){ # union="$1"
+  local union id dir i
+  union="$1"; id="${SCRIPT_SELECTOR}"; dir="SCRIPTS"
+
+  func_echo_base_topic "call chroot scripts (selector: ${id}):"
+
+  func_chroot_cmd "${union}" "/${dir}/script-update.sh ${id}" \
+    || func_echo "update error!"
+
+  func_chroot_call_script "${union}" "/${dir}/${id}0-basical-config.sh" \
+    && LAYER_BUILD_MARKER="true"   # build a Layer
+
+  for ((i=1;i<=3;i++)); do
+    func_chroot_call_script "${union}" "/${dir}/${id}${i}-apt-handler.sh" \
+      && LAYER_BUILD_MARKER="true"   # build a Layer
+  done
+
+  func_chroot_call_script "${union}" "/${dir}/script-clean_up_package_lists.sh" \
+    || func_echo "clean_up error!"
+}
+
+## -------------------------------------------------------------------------- ##
+## generate and save global logfile
+func_save_log_file(){ # log_file="$1"; start_complete="$2"
+  local log_file start_complete arch period destination
+  log_file="$1"; start_complete="$2"
+
+  ## time measurement: end
+  echo "--- Summary ---" | tee -a "${log_file}"
+  for arch in "${!ARCHITECTURE_ARRAY[@]}"
+  do
+    period="${ARCHITECTURE_ARRAY["$arch"]}"
+    echo "Generate ${arch} images - elapsed time: ${period} seconds" \
+      | tee -a "${log_file}"
+  done
+
+  period=$(($(date +%s) - start_complete))
+  echo "Generate all images - elapsed time: ${period} seconds" \
+    | tee -a "${log_file}"
+
+  for arch in "${!ARCHITECTURE_ARRAY[@]}"
+  do
+    ## log file handling
+    if [ -f "${log_file}" ]; then
+      destination="${TARGET_NAME}/${arch}/info/"
+      [ -d "${destination}" ] && sudo cp -ax "${log_file}" "${destination}"
+    fi
+  done
+  rm -f "${log_file}"
+}
+
+## -------------------------------------------------------------------------- ##
+## MAIN:
+## -------------------------------------------------------------------------- ##
+## wrapper functions:
+[ "${FUNC_SCRIPT_HANDLING}" = "true" ] ||
+[ "${FUNC_SCRIPT_LOGGING_HANDLING}" = "true" ] ||
+{
+  func_echo(){ echo "$1"; }
+}
+
+## ########################################################################## ##

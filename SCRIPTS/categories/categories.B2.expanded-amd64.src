@@ -1,0 +1,38 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## Debian packages:
+##
+## ########################################################################## ##
+myCLASS_DIR=(
+"AMD64"
+"AMD64_SYSTEM_PRINTING"
+"AMD64_FIRMWARE"
+)
+
+## AMD64
+myPACKAGE_LIST_AMD64=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+blender                                     # Suite für 3D-Modellierung/-Rendering
+brave-browser                               # The web browser from Brave
+darktable                                   # Virtueller Leuchttisch und virtuelle Dunkelkammer für Fotografen
+)
+
+myPACKAGE_LIST_AMD64_SYSTEM_PRINTING=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+## printer-driver-gutenprint - Gutenprint war früher als Gimp-Print bekannt.
+printer-driver-gutenprint                   # printer drivers for CUPS
+)
+
+## AMD64
+myPACKAGE_LIST_AMD64_FIRMWARE=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+firmware-nvidia-gsp                         # NVIDIA GSP firmware
+firmware-nvidia-tesla-gsp                   # NVIDIA GSP firmware (Tesla version)
+)
+
+
+## ########################################################################## ##

@@ -1,0 +1,62 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## create unionfs squashfs layer
+##
+## ########################################################################## ##
+export FUNC_LAYER_HANDLING="true"
+
+## include:
+source ./lib/func_mk-squasfs-image-handling
+
+## define:
+LOG_FILE_CREATE_LAYER="xx-create-LAYER"
+
+## -------------------------------------------------------------------------- ##
+## FUNCTIONS:
+## -------------------------------------------------------------------------- ##
+func_determine_layer_no(){
+  local layer_array layer_no
+  readarray -t layer_array < <(ls "${target}"/LAYER* 2>/dev/null)
+  layer_no=$(( ${#layer_array[@]} + 1 ))
+  echo "${layer_no}"
+}
+
+func_layer_handling(){ # arch="$1"
+  local arch target mountpoint
+  arch="$1"
+  target="./${TARGET_NAME}/${arch}"
+  image="${target}/${UPPER_OVERLAY_NAME}.img"
+  mountpoint="${target}/${MOUNT_DIR}/${UPPER_OVERLAY_NAME}.img"
+  info_dir="${target}/info"
+  log_file="${LOG_FILE}"
+
+  ## determine the $LAYER_NO
+  LAYER_NO=$(func_determine_layer_no)
+  echo "Next Layer: $LAYER_NO"
+
+  ## check if LAYER with $LAYER_NO exist
+  [ -f "${target}/LAYER${LAYER_NO}" ] &&
+  {
+    echo "LAYER${LAYER_NO} does exist"
+    return 2
+  }
+
+  func_init_log_file "${info_dir}" "${LOG_FILE_CREATE_LAYER}${LAYER_NO}"
+
+  ## mount upper overlay dir
+  func_qcow2_mount "${image}"
+
+  ## generate squashfs
+  func_mk_squashfs_image "${mountpoint}" "${target}/LAYER${LAYER_NO}"
+
+  ## unmount upper overlay dir
+  func_qcow2_umount "${image}"
+
+  ## rename image file
+  mv "${image}" "${target}/${UPPER_OVERLAY_NAME}_LAYER${LAYER_NO}.img"
+
+  LOG_FILE="${log_file}"
+}
+
+## ########################################################################## ##

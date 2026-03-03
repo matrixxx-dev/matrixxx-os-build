@@ -1,0 +1,80 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## init for distribution
+##
+## Trixie release:
+## - Upgrading to the new format
+##  - run: sudo apt modernize-sources --assume-yes
+##  - see: https://wiki.debian.org/SourcesList
+## ########################################################################## ##
+DISTRIBUTION="Debian"
+
+## Distribution Release
+## - https://de.wikipedia.org/wiki/Debian
+RELEASE_CHECK_DATE="20.10.2025"
+
+## Info block for /etc/apt/sources.list
+SOURCES_LIST_INFO="
+## ########################################################################## ##
+# Debian (${RELEASE_CHECK_DATE})
+# ------- -------- ------------ ---------- ----------- ------- ----- -----------
+# Version Name     Status       Release    Support-End Kernel        x86
+# ------- -------- ------------ ---------- ----------- ------- ----- -----------
+# 10      Buster                2019-07-06 2024-06-30  4.19.37 (LTS) amd64 i386
+# 11      Bullseye oldoldstable 2021-08-14 2026-08-31  5.10    (LTS) amd64 i386
+# 12      Bookworm oldstable    2023-06-10 2028-06-30  6.1     (LTS) amd64 i386
+# 13      Trixie   stable       2025-08-09             6.12    (LTS) amd64
+# 14      Forky    testing
+# 15      Duke
+# ------- -------- ------------ ---------- ----------- ------- ----- -----------
+# possible extra-suites:
+# - stable testing unstable(=sid) experimental
+# possible software categories:
+# - main contrib non-free non-free-firmware
+# [contrib, non-free and non-free-firmware are not conform to
+# Debian Free Software Guidelines (DFSG)]
+## ########################################################################## ##
+"
+## release:
+declare -a USED_RELEASE_ARRAY  # non-associative array
+USED_RELEASE_ARRAY=(
+"stable"
+)
+## possible extra-suites: ... "testing" "unstable" (=sid) "experimental"
+EXTRA_RELEASE=("testing" "unstable")
+## possible values: "main" "contrib" "non-free" "non-free-firmware"
+SOFTWARE_CATEGORY=("main" "contrib" "non-free-firmware")
+
+## -------------------------------------------------------------------------- ##
+## Debian
+## -------------------------------------------------------------------------- ##
+# MIRROR_URL="https://ftp.de.debian.org/debian/"
+# MIRROR_URL="https://deb.debian.org/debian/"
+# SECURITY_URL="https://security.debian.org/debian-security/"
+
+## TUD Dresden University of Technology
+## - https://tu-dresden.de/ing/informatik/
+MIRROR_URL="https://debian.inf.tu-dresden.de/debian/"
+SECURITY_URL="https://debian.inf.tu-dresden.de/debian-security/"
+
+## Gesellschaft für wissenschaftliche Datenverarbeitung mbH Göttingen
+## - https://ftp.gwdg.de/
+#MIRROR_URL="https://ftp.gwdg.de/debian/"
+#SECURITY_URL="https://ftp.gwdg.de/debian-security/"
+
+## Hochschule Esslingen - University of Applied Sciences
+## - https://www.hs-esslingen.de/
+#MIRROR_URL="https://ftp-stud.hs-esslingen.de/debian/"
+#SECURITY_URL="https://ftp-stud.hs-esslingen.de/debian-security/"
+
+## Johannes Gutenberg-Universität Mainz
+## - https://www.uni-mainz.de/
+#MIRROR_URL="https://ftp.uni-mainz.de/debian/"
+#SECURITY_URL="https://ftp.uni-mainz.de/debian-security/"
+
+SIGNED_BY="/usr/share/keyrings/debian-archive-keyring.gpg"
+
+LINE="## ########################################################################## ##"
+
+## ########################################################################## ##

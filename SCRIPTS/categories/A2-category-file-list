@@ -1,0 +1,12 @@
+#!/bin/bash
+
+## ########################################################################## ##
+
+## only download
+source ./LIB/func_apt-get-download-handling
+
+CATEGORY_FILE_LIST=(
+"categories.A2.base-download.src"
+)
+
+## ########################################################################## ##

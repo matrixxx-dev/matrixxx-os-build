@@ -1,0 +1,360 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## Debian packages
+##
+## ########################################################################## ##
+myCLASS_DIR=(
+"INSTALL_CONFIG"
+"MODULE"
+"APPLICATIONS"
+"AUDIO_VIDEO_GRAPHIC"
+"DEVELOPMENT"
+"INTERNET"
+"SYSTEM"
+"SYSTEM_PRINTING"
+"SYSTEM_SCAN"
+"SYSTEM_QR"
+)
+
+## - explicite config necessary:
+myPACKAGE_LIST_INSTALL_CONFIG=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+gitlab-common                               # [contrib]: git powered software platform to collaborate on code (common)
+jackd2                                      # JACK Audio Connection Kit
+)
+
+## MODULE
+myPACKAGE_LIST_MODULE=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+dkms                                        # Dynamisches Kernelmodul-System (DKMS)
+v4l2loopback-dkms                           # Quelltext für den v4l2loopback-Treiber (DKMS)
+)
+
+## APPLICATIONS
+myPACKAGE_LIST_APPLICATIONS=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+"bluefish bluefish-plugins"                 # GTK+-Texteditor für Software- und Webentwicklung
+calibre                                     # Leistungsstarker und einfach zu bedienender E-Book-Manager
+chkrootkit                                  # rootkit detector
+dc3dd                                       # patched version of GNU dd with forensic features
+ebook-speaker                               # eBook reader that reads aloud in a synthetic voice
+enchant-2                                   # Adapter für verschiedene Rechtschreibprüfungen (Binärprogramme)
+espeak                                      # Programm zur mehrsprachigen Sprachsynthese
+espeak-data                                 # Programm zur mehrsprachigen Sprachsynthese: Sprachdaten
+espeak-ng-data                              # Programm zur mehrsprachigen Sprachsynthese: Sprach-Datendateien
+feh                                         # Auf imlib2 basierender Bildbetrachter
+firejail                                    # sandbox to restrict the application environment
+fonts-symbola                               # Symbolschrift mit Emoji-Zeichen aus Unicode 9.0
+#### geany (start)
+geany                                       # Schnelle und leichtgewichtige IDE
+#geany-plugins                               # set of plugins for Geany
+geany-plugin-addons                         # miscellaneous plugins for Geany
+geany-plugin-autoclose                      # auto-closing plugin for Geany
+geany-plugin-automark                       # auto-mark plugin for Geany
+geany-plugin-codenav                        # code navigation plugin for Geany
+geany-plugin-commander                      # command panel plugin for Geany
+geany-plugin-ctags                          # ctags plugin for Geany
+geany-plugin-debugger                       # debugger plugin for Geany
+geany-plugin-defineformat                   # on-the-fly #define prettyprinter plugin for Geany
+geany-plugin-doc                            # documentation plugin for Geany
+geany-plugin-extrasel                       # extra selection plugin for Geany
+geany-plugin-gendoc                         # documentation generation plugin for Geany
+geany-plugin-geniuspaste                    # GeniusPaste plugin for Geany
+geany-plugin-git-changebar                  # git change bar plugin for Geany
+geany-plugin-gproject                       # transitional dummy package for geany-plugin-projectorganizer
+geany-plugin-insertnum                      # number inserting plugin for Geany
+geany-plugin-keyrecord                      # git change bar plugin for Geany
+geany-plugin-latex                          # improved LaTeX support plugin for Geany
+geany-plugin-lineoperations                 # Line Operations plugin for Geany
+geany-plugin-lipsum                         # Lorem Ipsum generator plugin for Geany
+geany-plugin-lsp                            # LSP plugin for Geany
+geany-plugin-lua                            # Lua scripting plugin for Geany
+geany-plugin-macro                          # macro plugin for Geany
+geany-plugin-markdown                       # markdown plugin for Geany
+geany-plugin-miniscript                     # Geany Mini-Script filter plugin
+geany-plugin-numberedbookmarks              # numbered bookmarks plugin for Geany
+geany-plugin-overview                       # overview plugin for Geany
+geany-plugin-pairtaghighlighter             # tag pair highlighter plugin for Geany
+geany-plugin-pg                             # pg plugin for Geany
+geany-plugin-pohelper                       # Geany plugin for improved support for GetText translation files
+geany-plugin-prettyprinter                  # XML pretty printer for Geany
+geany-plugin-prj                            # alternative project manager for Geany
+geany-plugin-projectorganizer               # projectorganizer plugin for Geany
+geany-plugin-scope                          # graphical GDB front-end for Geany
+geany-plugin-sendmail                       # mailer plugin for Geany
+geany-plugin-shiftcolumn                    # text column shifting plugin for Geany
+geany-plugin-spellcheck                     # spellcheck plugin for Geany
+geany-plugin-tableconvert                   # table convert plugin for Geany
+geany-plugin-treebrowser                    # tree browser plugin for Geany
+geany-plugin-updatechecker                  # update checker plugin for Geany
+geany-plugin-vc                             # VCS plugin for Geany
+geany-plugin-vimode                         # Vim-mode plugin for Geany
+geany-plugin-webhelper                      # web helper plugin for Geany
+geany-plugin-workbench                      # workbench plugin for Geany
+geany-plugin-xmlsnippets                    # XMLSnippets plugin for Geany
+geany-plugins-common                        # set of plugins for Geany (translations)
+#### geany (end)
+gimagereader                                # Graphical GTK+ front-end to tesseract-ocr
+gimagereader-qt5                            # Graphical Qt 5 front-end to tesseract-ocr
+gocr                                        # Command line OCR <- xsane
+gpart                                       # Guess PC disk partition table, find lost partitions
+hunspell                                    # Programm für Rechtschreibprüfung und morphologische Analyse
+hunspell-de-de                              # Deutsches Wörterbuch für Hunspell
+hunspell-en-us                              # Hunspell-Wörterbuch für amerikanisches Englisch
+hyphen-de                                   # German hyphenation patterns
+hyphen-en-us                                # English (US) hyphenation patterns
+"jekyll jekyll-theme-minima"                # jekyll: simple, blog aware, static site generator + beautiful, minimal theme for jekyll
+kdiff3                                      # Vergleicht und führt zwei oder drei Dateien oder Verzeichnisse zusammen
+keepassxc                                   # Plattformübergreifender Kennwort-Verwalter
+kruler                                      # screen ruler
+kstars                                      # desktop planetarium, observation planning and telescope control
+librecad                                    # System für computerunterstützte Konstruktion
+libreoffice                                 # Büroprogrammsammlung (Metapaket)
+libreoffice-help-de                         # Büroprogrammsammlung -- Deutsche Hilfe
+libreoffice-help-en-us                      # Büroprogrammsammlung -- Hilfe in amerikanischem Englisch
+lirc                                        # Unterstützung für Infrarot-Fernbedienungen - Daemons und Werkzeuge
+lirc-compat-remotes                         # Compatibility remote definitions for lirc
+lirc-doc                                    # Unterstützung für Infrarot-Fernbedienungen - Webseite und Handbücher
+lirc-drv-irman                              # LIRC plugin providing irman compatible devices support
+marble                                      # Globus- und Karten-Widget
+mythes-de                                   # German Thesaurus for OpenOffice.org/LibreOffice
+mythes-en-us                                # English (USA) Thesaurus for LibreOffice
+okular                                      # Universal-Dokumentenbetrachter
+okular-extra-backends                       # Unterstützung zusätzlicher Formate
+okular-mobile                               # Unterstützung für Mobilgeräte
+opensc                                      # Chipkarten-Werkzeuge mit Unterstützung für PKCS#15-kompatible Karten
+"ovmf ovmf-ia32"                            # UEFI firmware for 64-bit und 32-bit x86 virtual machines
+paperwork-gtk                               # GTK3 frontend
+paperwork-gtk-l10n-de                       # German localization
+paperwork-gtk-l10n-en                       # English localization
+"paperwork-backend paperwork-backend-doc"   # Personal document manager
+paperwork-shell                             # command line utils
+parallel                                    # build and execute command lines from standard input in parallel
+pdftk                                       # Werkzeug zur Manipulation von PDF-Dokumenten - Übergangspaket
+qrencode                                    # Erzeugung von PNG-Bildern mit QR-Codes
+sqlitebrowser                               # GUI-Editor für SQLite-Datenbanken
+spyder                                      # Richly-featured Python IDE
+stellarium                                  # Echtzeit-Generator für fotorealistische Himmelsansichten
+tesseract-ocr                               # tesseract-ocr: Kommandozeilenwerkzeug für (optische) Zeichenerkennung (OCR)
+"tesseract-ocr-deu tesseract-ocr-eng"       # language files for German, English
+tesseract-ocr-osd                           # Optische Zeichenerkennung - Sprachdateien für Schrift und Ausrichtung
+xournal                                     # GTK+-Anwendung zum Notizen machen
+xournalpp                                   # Xournal++ - Open source hand note-taking program
+)
+
+## AUDIO & VIDEO & GRAPHIC
+myPACKAGE_LIST_AUDIO_VIDEO_GRAPHIC=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+audacity                                    # (inst.) Schneller, plattformunabhängiger Audio-Editor
+easyeffects                                 # Audio effects for PipeWire applications
+gimp                                        # GNU Image Manipulation Program
+gimp-data-extras                            # Zusätzliche Pinsel und Muster für GIMP
+gimp-help-de                                # Dokumentation für das GNU-Bildbearbeitungsprogramm (Deutsch)
+gimp-plugin-registry                        # repository of optional extensions for GIMP
+gimp-texturize                              # generates large textures from a small sample
+gmic                                        # GREYC's Magic for Image Computing
+gmic-zart                                   # GREYC's Magic for Image Computing - ZArt
+gphoto2                                     # digital camera command-line client
+"handbrake handbrake-cli"                   # versatile DVD ripper and video transcoder (GTK+ GUI-command line)
+helvum                                      # GTK patchbay for pipewire
+imagemagick                                 # image manipulation programs -- binaries
+"inkscape inkscape-open-symbols"            # vector-based drawing program
+inkscape-tutorials                          # Vektorbasiertes Zeichenprogramm - Anleitungen
+kimageformat-plugins                        # Zusätzliche Bildformat-Plugins für QtGui
+lame                                        # MP3 encoding library (frontend)
+libavif-bin                                 # Bibliothek zur Verarbeitung von .avif-Dateien (Dienstprogramme)
+libavif-gdk-pixbuf                          # Library for handling .avif files (GDK pixbuf plugin)
+libheif-plugins-all                         # HEIF and AVIF file format decoder and encoder - plugins metapackage
+libmagick++-dev                             # object-oriented C++ interface to ImageMagick -- dummy package
+mpv                                         # video player based on MPlayer/mplayer2
+obs-studio                                  # recorder and streamer for live video content
+obs-plugins                                 # recorder and streamer for live video content (plugins)
+"openshot-qt openshot-qt-doc"               # Erzeugt und bearbeitet Videos und Filme
+pavucontrol-qt                              # Qt port of volume control pavucontrol
+pavucontrol-qt-l10n                         # Language package for pavucontrol-qt
+qpwgraph                                    # User interface for controlling the PipeWire Graph
+gwenview                                    # image viewer
+rawtherapee                                 # Umwandler für RAW-Bilder und Bearbeitungssoftware für Digitalfotos
+scrcpy                                      # [contrib]: Display and control your Android device
+vlc                                         # Multimediaplayer und -streamer
+vlc-l10n                                    # Übersetzungen für VLC
+vorbis-tools                                # several Ogg Vorbis tools
+"wireplumber wireplumber-doc"               # modular session / policy manager for PipeWire
+yt-dlp                                      # downloader of videos from YouTube and other sites
+)
+
+## DEVELOPMENT
+myPACKAGE_LIST_DEVELOPMENT=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+android-sdk-platform-tools                  # Tools for interacting with an Android platform
+autoconf                                    # Erstellt automatisch configure-Skripte
+automake                                    # Werkzeug zum Erzeugen von Makefiles, die den GNU-Standards folgen
+autopoint                                   # Werkzeug zum Einrichten der gettext-Infrastruktur in einem Quellpaket
+bundler                                     # Verwaltung der Abhängigkeiten von Ruby-Anwendungen siehe "jekyll"
+chrpath                                     # Tool to edit the rpath in ELF binaries
+cmake                                       # Plattformübergreifendes, quelloffenes Make-System
+cpanminus                                   # script to get, unpack, build and install modules from CPAN
+crossbuild-essential-arm64                  # Informational list of cross-build-essential packages
+crossbuild-essential-armel                  # Informational list of cross-build-essential packages
+crossbuild-essential-armhf                  # Informational list of cross-build-essential packages
+fastboot                                    # Android fastboot tool
+eslint                                      # AST-based pattern checker for JavaScript
+gdb                                         # GNU-Debugger
+git-all                                     # git-all: Schnelles, skalierbares, verteiltes Versionskontrollsystem (alle Unterpakete)
+git-lfs                                     # Git Large File Support
+gitg                                        # Programm zur Betrachtung von Git-Depots - GNOME
+heimdall-flash-frontend                     # Flashing firmware on Samsung Galaxy S devices - Qt GUI (include heimdall-flash)
+jq                                          # Leichtgewichtiger und flexibler JSON-Prozessor für die Kommandozeile
+jqp                                         # TUI playground to experiment with jq (program)
+kdesvn                                      # Subversion client with tight KDE integration
+libapache2-mod-svn                          # Apache Subversion - Servermodule für den Apache-Webserver (httpd)
+libgtk-3-dev                                # GTK - Bibliothek für grafische Benutzeroberflächen - Entwicklungsdateien
+libgtk-4-dev                                # GTK - Bibliothek für grafische Benutzeroberflächen - Entwicklungsdateien
+libgtk2.0-dev                               # GTK - Bibliothek für grafische Benutzeroberflächen - Entwicklungsdateien
+libsvn-dev                                  # Entwicklungsdateien für Apache-Subversion-Bibliotheken
+meld                                        # Grafisches Werkzeug zum Vergleichen und Zusammenfassen von Dateien
+meson                                       # high-productivity build system
+openjfx                                     # JavaFX/OpenJFX - Rich client application platform for Java
+default-jdk                                 # Standard Java or Java compatible Development Kit
+pandoc                                      # general markup converter
+patch                                       # Apply a diff file to an original
+patchutils                                  # Utilities to work with patches
+poedit                                      # Ein Editor für Übersetzungen im »gettext catalog«-Format
+qgit                                        # QT-Anwendung zur Anzeige von GIT-Bäumen
+shellcheck                                  # lint tool for shell scripts
+subversion                                  # Fortschrittliches Versionskontrollsystem
+subversion-tools                            # Assorted tools related to Apache Subversion
+tidy                                        # HTML/XML-Syntaxprüfung und -Neuformatierung
+tig                                         # Auf ncurses basierende Textmodus-Oberfläche für Git
+)
+
+## INTERNET
+###############################################################################
+################### !! first firefox-esr then firefox !! ######################
+###############################################################################
+myPACKAGE_LIST_INTERNET=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+bind9                                       # Server zur Namensauflösung von Internet Domains
+bind9-dnsutils                              # Clients provided with BIND 9
+bind9-host                                  # DNS Lookup Utility
+filezilla                                   # Komplett ausgestatteter grafischer FTP-/FTPS-/SFTP-Client
+"firefox-esr firefox-esr-l10n-de"           # Mozilla Firefox web browser - Extended Support Release (ESR)
+"firefox firefox-l10n-de"                   # Mozilla Firefox web browser
+jetty9                                      # Java-Webserver und -Servlet-Engine
+linphone-cli                                # SIP-Softwaretelefon - Konsolenclient
+linphone-desktop                            # SIP softphone - graphical client
+"thunderbird thunderbird-l10n-de"           # mail/news client with RSS, chat and integrated spam filter support
+"tor torsocks"                              # Anonymisierende Netzwerkschicht für TCP + GeoIP database for Tor
+yt-dlp                                      # downloader of videos from YouTube and other sites
+)
+
+## SYSTEM
+myPACKAGE_LIST_SYSTEM=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+aqemu                                       # Qt5-Oberfläche für QEMU und KVM
+arandr                                      # Simple visual front end for XRandR
+apt-file                                    # Suche nach Dateien in Debian-Paketen (Befehlszeilen-Schnittstelle)
+apt-mirror                                  # Werkzeug zum Spiegeln von APT-Quellen
+apt-offline                                 # Offline-APT-Paketverwaltung
+apt-offline-gui                             # Offline-APT-Paketverwaltung - grafische Oberfläche
+apt-show-versions                           # Listet die verfügbaren Paket-Versionen mit dazugehöriger Distribution auf
+apt-transport-tor                           # APT transport for anonymous package downloads via Tor
+apt-utils                                   # Hilfsprogramme für die Paketverwaltung
+apparmor                                    # Userspace-Analyseprogramm für AppArmor
+apparmor-profiles                           # Experimentelle Profile für AppArmor-Sicherheitsrichtlinien
+apparmor-utils                              # utilities for controlling AppArmor
+binfmt-support                              # Support for extra binary formats
+btop                                        # Modern and colorful command line resource monitor that shows usage and stats
+cdebootstrap-static                         # Bootstrap a Debian system - static binary
+ccrypt                                      # Sichere Verschlüsselung und Entschlüsselung von Dateien und Streams
+check-dfsg-status                           # check DFSG compliance of installed packages
+cloop-utils                                 # Tools for handling with cloop compressed volumes
+compiz                                      # OpenGL-Fenster- und Composition-Manager
+compiz-plugins-extra                        # Compiz Reloaded plugins - extra collection
+dconf-cli                                   # simple configuration storage system - utilities
+dconf-editor                                # Einfaches Konfigurations-Speichersystem - grafischer Editor
+debfoster                                   # Install only wanted Debian packages
+debhelper                                   # Hilfsprogramme für debian/rules
+debootstrap                                 # Erststart eines Debian-Basissystems (Skript)
+debtree                                     # Abhängigkeitsgraphen von Paketen auf Steroiden
+distro-info                                 # provides information about the distributions' releases
+equivs                                      # Umgehung der Abhängigkeiten zwischen Debian-Pakete
+extundelete                                 # utility to recover deleted files from ext3/ext4 partition
+f3                                          # test real flash memory capacity
+gdebi                                       # Programm für Installation von deb-Dateien GNOME-GUI
+gocryptfs                                   # Encrypted overlay filesystem written in Go
+info                                        # Selbstständiger Browser für die GNU Info-Dokumentation
+libgtk-3-bin                                # GTK - Bibliothek für grafische Benutzeroberflächen - Programme
+libgtk-3-doc                                # GTK - Bibliothek für grafische Benutzeroberflächen - Dokumentation
+libgtk-4-bin                                # GTK - Bibliothek für grafische Benutzeroberflächen - Programme
+libgtk-4-doc                                # documentation for the GTK graphical user interface library
+libgtk2.0-bin                               # GTK - Bibliothek für grafische Benutzeroberflächen - Programme
+libgtk2.0-doc                               # GTK - Bibliothek für grafische Benutzeroberflächen - Dokumentation
+libgtksourceview-3.0-1                      # GTK+-Widget für Syntaxmarkierung
+libgtksourceview-4.0                        # GTK+-Widget für Syntaxmarkierung
+libgtksourceview-5-0                        # GTK-4-Widget zur Syntaxhervorhebung - Laufzeitbibliothek
+libpcsclite-dev                             # Middleware to access a smart card using PC/SC (development files)
+lz4                                         # Schnelle Bibliothek für den LZ-Komprimierungsalgorithmus - Werkzeuge
+lz4json                                     # unpack lz4json files, usually generated by Mozilla programs
+manpages-de                                 # German man pages
+menulibre                                   # Fortschrittlicher FreeDesktop.org-konformer Menüeditor
+ncdu                                        # Anzeige der Plattenbelegung mit ncurses
+nodejs                                      # Ereignisgesteuerte E/A für JavaScript V8
+nodejs-doc                                  # Ereignisgesteuerte E/A für JavaScript V8 (Node.js) - API-Dokumentation
+npm                                         # Paketverwaltung für Node.js
+ntpsec                                      # Daemon und Hilfsprogramme für das Network Time Protocol
+"pcmanfm-qt pcmanfm-qt-l10n"                # extremely fast and lightweight file and desktop icon manager
+pcscd                                       # Middleware für den Zugriff auf Chipkarten mit PC/SC (Daemon-Software)
+pcsc-tools                                  # Einige Programme für die Arbeit mit Chipkarten und PC/SC
+qemu-system                                 # QEMU - Programme zur Emulation eines vollständigen Rechners
+qemu-system-gui                             # QEMU - Programme zur Emulation vollständiger Systeme (Benutzeroberfläche & Audio-Unterstützung)
+qemu-guest-agent                            # Agent für QEMU-Gastsysteme
+"qemu-user qemu-user-binfmt"                # QEMU-Emulationsprogramme im Benutzermodus + Schneller Prozessor-Emulator, binfmt-Registrierung für qemu-user
+qemu-user-static                            # QEMU - Binärdateien zur Usermode-Emulation (statische Version)
+software-properties-common                  # Depotverwaltung für Softwareinstallationen (gemeinsame Dateien)
+terminator                                  # multiple GNOME terminals in one window
+thunar                                      # Xfce-Dateimanager
+usbutils                                    # Linux-USB-Hilfsprogramme
+winbind                                     # service to resolve user and group information from Windows NT servers
+)
+
+myPACKAGE_LIST_SYSTEM_PRINTING=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+foomatic-db-engine                          # Druckerunterstützung von OpenPrinting - Programme
+foomatic-db-compressed-ppds                 # OpenPrinting printer support - Compressed PPDs derived from the database
+hp-ppd                                      # »Postscript Printer Definition«-(PPD)-Dateien für HP
+openprinting-ppds                           # Druckerunterstützung von OpenPrinting - PostScript-PPD-Dateien
+hpijs-ppds                                  # HP Linux Printing and Imaging - HPIJS-Druckerdefinitions-Dateien
+)
+
+myPACKAGE_LIST_SYSTEM_SCAN=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+## scanner: xsane see myPACKAGE_LIST_TASKSEL_RECOMMENDS
+libsane-hpaio                               # SANE-Backend für HP-Multifunktions-Peripheriegeräte
+libsane1                                    # API library for scanners
+simple-scan                                 # Einfaches Scan-Programm
+skanlite                                    # image scanner based on the KSane backend
+)
+
+myPACKAGE_LIST_SYSTEM_QR=(
+#Name                                         Beschreibung
+#============================================-================================================================================
+qreator                                     # graphical utility for creating QR codes
+zbar-tools                                  # QR code / bar code scanner and decoder (utilities)
+zbarcam-gtk                                 # QR code / bar code scanner and decoder (Gtk camera tool)
+zbarcam-qt                                  # QR code / bar code scanner and decoder (Qt camera tool)
+zint                                        # command line utility to encode data in barcode symbolszint
+zint-qt                                     # Zint Barcode Studio, a QT frontend to zint
+)
+
+## ########################################################################## ##

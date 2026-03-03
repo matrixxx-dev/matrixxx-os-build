@@ -1,0 +1,145 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## Genaration of a Debian Base System using debootstrap
+##
+## NAME
+##    debootstrap - Bootstrap a basic Debian system
+##
+## SYNOPSIS
+##    debootstrap [OPTION...] SUITE TARGET [MIRROR [SCRIPT]]
+##                   OPTIONS: --arch
+##                            --variant
+##                            --foreign
+##                            --extra-suites
+##                            --components
+##                            --include
+##    debootstrap [OPTION...] --second-stage
+##
+## necessary packages: debootstrap, wget, ar(part of GNU Binutils - binutils)
+##                     eventl.: ncurses-term, makedev
+##
+## ########################################################################## ##
+export FUNC_DEBOOTSTRAP_HANDLING="true"
+
+## define:
+LOG_FILE_DEBOOTSTRAP="xx-debootstrap-process"
+DPKG_FILE_DEBOOTSTRAP="xx-after-debootstrap"
+
+## -------------------------------------------------------------------------- ##
+## FUNCTIONS:
+## -------------------------------------------------------------------------- ##
+## copy the system configuration (rootfs.tar.gz) to the union
+func_copy_base_config_system(){ # target="$1"; union="$2"; file="$3"
+  local target union file
+  target="$1"; union="$2"; file="$3"
+  echo "- extract ${file} to ${union}"
+  func_extract_targz_to_dir "${union}" "${file}"
+
+  ## copy used system config file
+  info_dir="${target}/info"
+  [ -d "${info_dir}" ] || mkdir -p "${info_dir}"
+  cp ./"${file}" "${info_dir}"/
+}
+
+## -------------------------------------------------------------------------- ##
+func_init_debootstrap(){ # arch="$1"
+  local stageing arch variant components include
+
+  ## OPTIONS:
+  stageing="--foreign"
+  arch="--arch=$1"
+  variant="--variant=minbase"
+  components="--components=main,contrib,non-free-firmware"
+  include="--include=locales,adduser"
+  OPTIONS="${stageing} ${arch} ${variant} ${components} ${include}"
+
+  ## SUITE (stable testing unstable experimental):
+  SUITE="stable"
+
+  ## MIRROR:
+  #MIRROR="https://deb.debian.org/debian/"
+  MIRROR="https://debian.inf.tu-dresden.de/debian/"
+}
+
+## -------------------------------------------------------------------------- ##
+## debootstrap
+func_build_debootstrap(){ # options="$1"; suite="$2"; union="$3"; mirror="$4"
+  local options suite union mirror
+  options="$1"; suite="$2"; union="$3"; mirror="$4"
+  func_cmd_response "sudo debootstrap ${options} ${suite} ${union} ${mirror}"
+  sudo rm -f ./wget-log*
+}
+
+## debootstrap -second stage
+func_build_debootstrap_second_stage(){ # union="$1"
+  local union
+  union="$1"
+  func_cmd_response "sudo chroot ${union} /debootstrap/debootstrap --second-stage"
+}
+
+## -------------------------------------------------------------------------- ##
+func_process_debootstrap(){ # arch="$1"; union="$2"
+  local arch union main_start period
+  arch="$1"; union="$2"
+
+  ## check if base system already available
+  [ -d "${union}" ] || return 1
+  [ -d "${union}/proc" ] && return 2
+
+  func_init_log_file "${info_dir}" "${LOG_FILE_DEBOOTSTRAP}"
+
+  ## time measurement: start
+  main_start=$(date +%s)
+
+  ## generate base system:
+  func_init_debootstrap "${arch}"
+  func_build_debootstrap "${OPTIONS}" "${SUITE}" "${union}" "${MIRROR}" &&
+    func_build_debootstrap_second_stage "${union}"
+
+  ## time measurement: end
+  period=$(($(date +%s) - main_start))
+  func_echo "Processing - elapsed time: ${period} seconds"
+}
+
+## -------------------------------------------------------------------------- ##
+func_debootstrap_handling(){ # arch="$1"
+  local arch target union mountpoint info_dir log_file
+  arch="$1";
+  target="./${TARGET_NAME}/${arch}"; union="${target}/${MNT_UNION_DIR}"
+  mountpoint="${target}/${MOUNT_DIR}/${UPPER_OVERLAY_NAME}.img"
+  info_dir="${target}/info"
+  log_file="${LOG_FILE}"      # save LOG_FILE
+
+  ## debootstrap process
+  ## - only if necessary (check if ${union}/proc exist)
+  func_process_debootstrap "${arch}" "${union}" &&
+  {
+    ## post-debootstrap process
+    local config_file
+    config_file="${CONFIG_DIR}/rootfs.tar.gz"
+
+    ## create *.bak files from files that will be overwritten later.
+    ## (upper layer)
+    func_save_originals "${union}"
+    ## copy the system configuration (rootfs.tar.gz) to the upper layer
+    func_copy_base_config_system "${target}" "${union}" "${config_file}"
+    ## copy files from host to chroot environment to enable the installation
+    func_configure_system_INSTALLATION "${mountpoint}"
+    ## init chroot environment
+    func_pre_process_chroot "${union}"
+    ## start scripts on chroot environment
+    func_chroot_cmd "${union}" "/SCRIPTS/script-dpkg-l.sh ${DPKG_FILE_DEBOOTSTRAP}"
+    func_chroot_call_script "${union}" "/SCRIPTS/00-basical-config.sh"
+    func_chroot_call_script "${union}" "/SCRIPTS/script-clean_up_package_lists.sh"
+    ## reset chroot environment
+    func_post_process_chroot "${union}"
+    ## reset chroot environment on upper layer
+    func_configure_system_USAGE "${target}" "${mountpoint}"
+
+    LAYER_BUILD_MARKER="true"   # build a Layer
+  }
+  LOG_FILE="${log_file}"      # restore LOG_FILE
+}
+
+## ########################################################################## ##

@@ -1,0 +1,52 @@
+#!/bin/bash
+
+## ########################################################################## ##
+
+## include:
+source ./lib/func_script-logging-handling
+source ./lib/func_install-handling
+source ./lib/func_qcow2-handling
+source ./lib/func_unionfs-handling
+source ./lib/func-debootstrap-handling
+source ./lib/func_update-archive-handling
+source ./lib/func_chroot-handling
+source ./lib/func_layer-handling
+
+## -------------------------------------------------------------------------- ##
+TARGET_NAME="matrixxx_00"     # --variant=minbase
+
+SELECTOR_ARRAY=("A" "B" "C")
+#SELECTOR_ARRAY=("D")
+
+## -------------------------------------------------------------------------- ##
+declare -A ARCHITECTURE_ARRAY=(
+["amd64"]=""
+["i386"]=""
+)
+
+## -------------------------------------------------------------------------- ##
+SCRIPT_SELECTOR=""                  # loop indicator <- SELECTOR_ARRAY
+LAYER_BUILD_MARKER=""               # indicator is true if LAYER should be build
+
+## -------------------------------------------------------------------------- ##
+QCOW_FILE_SIZE="12G"
+UPPER_OVERLAY_NAME="upper-overlay"
+OVERLAY_BASE_NAME="LAYER"
+MOUNT_DIR="mnt"                     # mountpoint for all layers
+MNT_UNION_DIR="mnt-unionfs"         # mountpoint for overlay union fs
+
+#DEF_OVERLAY="overlayfs"             # "TODO: can't work without 'lowerdir'"
+DEF_OVERLAY="aufs"
+
+## -------------------------------------------------------------------------- ##
+BASE_SYSTEM_PREFIX="system"
+BASE_SYSTEM="debian"
+BASE_SYSTEM_CONFIG="${BASE_SYSTEM_PREFIX}_${BASE_SYSTEM}" # -> system_debian
+
+CONFIG_DIR="${BASE_SYSTEM_CONFIG}/config-system-modernize"
+QCOW_TEMPLATE_FILE="${BASE_SYSTEM_CONFIG}/12GB.qcow2.img"
+
+USE_QCOW_TEMPLATE_FILE="true"
+
+
+## ########################################################################## ##

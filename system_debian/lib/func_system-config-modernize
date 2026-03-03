@@ -1,0 +1,87 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## Debian GNU/Linux
+## - https://www.debian.org/releases/stable/
+##  - https://www.debian.org/ports/amd64/
+##  - https://www.debian.org/ports/i386/  => will be removed in a future release
+##
+## note: sudo apt modernize-sources for modernize the sources
+## ########################################################################## ##
+export FUNC_SYSTEM_CONFIG_MODERNIZE="true"
+
+## -------------------------------------------------------------------------- ##
+## FUNCTIONS (generate files):
+## -------------------------------------------------------------------------- ##
+func_gen_sources_list_file(){ # base_dir="$1"
+  local element file
+  file="${1}/config-system-modernize/rootfs/etc/apt/sources.md"
+  sudo rm -f "${file}"
+  echo "${SOURCES_LIST_INFO}" | sudo tee "${file}"
+
+  ## ------------------------------------------------------------- ##
+  file="${1}/config-system-modernize/rootfs/etc/apt/sources.list.d/debian.sources"
+  sudo rm -f "${file}"
+
+  {
+    ## set base release
+    echo "## base for this installation:";
+    for element in "${USED_RELEASE_ARRAY[@]}"; do
+      echo "Types: deb"
+      echo "URIs: ${MIRROR_URL}"
+      echo "Suites: ${element}"
+      echo "Components: ${SOFTWARE_CATEGORY[*]}"
+      echo "Signed-By: ${SIGNED_BY}"
+      echo ""
+    done
+
+    # set security releases
+    echo "## security updates:";
+    for element in "${USED_RELEASE_ARRAY[@]}" ; do
+      echo "Types: deb"
+      echo "URIs: ${SECURITY_URL}"
+      echo "Suites: ${element}-security"
+      echo "Components: ${SOFTWARE_CATEGORY[*]}"
+      echo "Signed-By: ${SIGNED_BY}"
+      echo ""
+    done
+
+    element="testing"
+    if [[ "${EXTRA_RELEASE[*]}" =~ ${element} ]]; then
+      echo "Types: deb"
+      echo "URIs: ${SECURITY_URL}"
+      echo "Suites: ${element}-security"
+      echo "Components: ${SOFTWARE_CATEGORY[*]}"
+      echo "Signed-By: ${SIGNED_BY}"
+      echo ""
+    fi
+
+    ## set extra releases
+    echo "## testing / unstable / experimental contain newer versions:";
+    for element in "${EXTRA_RELEASE[@]}"; do
+      echo "Types: deb"
+      echo "URIs: ${MIRROR_URL}"
+      echo "Suites: ${element}"
+      echo "Components: ${SOFTWARE_CATEGORY[*]}"
+      echo "Signed-By: ${SIGNED_BY}"
+      echo ""
+    done
+  } | sudo tee -a "${file}"
+}
+
+func_gen_apt_conf_file(){ # base_dir="$1"
+  local element file
+  file="${1}/config-system-modernize/rootfs/etc/apt/apt.conf"
+  sudo rm -f "${file}"
+
+##  echo -n | sudo tee "${file}"
+##  {
+##    echo "#APT::Default-Release \"stable\";"
+##    echo "#APT::Default-Release \"testing\";"
+##    echo "#APT::Default-Release \"unstable\";"
+##    echo "";
+##    echo "APT::Default-Release \"${DEFAULT_RELEASE}\";"
+##  } | sudo tee -a "${file}"
+}
+
+## ########################################################################## ##

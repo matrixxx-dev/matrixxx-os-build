@@ -1,0 +1,72 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## Several helpful functions - category-file handling:
+##  category-files are files which are contains several debian package lists
+##  these files can be used to install the contained packages
+##
+## input: CATEGORY_FILE_LIST array of category-files
+##
+## ########################################################################## ##
+export FUNC_CATEGORY_FILE_HANDLING="true"
+
+## name substitution from 'categories*.src' file
+CLASS_ARRAY_NAME="myCLASS_DIR"
+PACKAGE_ARRAY_NAME="myPACKAGE_LIST"
+
+## -------------------------------------------------------------------------- ##
+## FUNCTIONS:
+## -------------------------------------------------------------------------- ##
+## process the selected category file
+func_process_category_file(){
+  local class_array_name class_array
+  local package_array_name package_array
+  local k element
+
+  ## set the class array for processing
+  class_array_name="${CLASS_ARRAY_NAME}[@]"
+  class_array=("${!class_array_name}")
+
+  for k in "${!class_array[@]}"
+  do
+    func_echo_base_topic "categorie: ${class_array[k]}"
+    package_array_name="${PACKAGE_ARRAY_NAME}_${class_array[k]}[@]"
+    package_array=("${!package_array_name}")
+
+    for element in "${package_array[@]}"
+    do
+      func_echo "found package: ${element}"
+      func_apt_get_package "${element}"
+    done
+
+    ## Clears local repository of retrieved package files
+    ## after each different "class_array"
+    func_apt_get_clean
+
+  done
+}
+
+## process all categorie files from CATEGORY_FILE_LIST
+func_process_category_files(){
+  local categorie_file
+  [ ${#CATEGORY_FILE_LIST[@]} -eq 0 ] && return 1
+  for categorie_file in "${CATEGORY_FILE_LIST[@]}"
+  do
+    echo "categorie file: ${categorie_file}"
+    source "./categories/${categorie_file}"
+    func_process_category_file
+  done
+}
+
+## ## get category-files from FS
+## func_get_category_files()
+## {
+##   local dir
+##   dir=$(pwd)
+##
+##   ## declarations the category-file list
+##   readarray -t CATEGORY_FILE_LIST <<< "$(ls "${dir}"/categories*.src)"
+## }
+
+## ########################################################################## ##
+

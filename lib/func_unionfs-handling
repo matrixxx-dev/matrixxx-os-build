@@ -1,0 +1,195 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## installing a Unix/Linux system as a unionfs
+##
+## ########################################################################## ##
+export FUNC_UNIONFS_HANDLING="true"
+
+## -------------------------------------------------------------------------- ##
+## FUNCTIONS:
+## -------------------------------------------------------------------------- ##
+## get upper overlay image
+func_get_upper_overlay_image(){ # target="$1"
+  local target
+  target="$1"
+  if [ "${USE_QCOW_TEMPLATE_FILE}" = "true" ]; then
+    ## copy existing upper overlay image if necessary
+    func_copy_upper_overlay_image "${target}" "${UPPER_OVERLAY_NAME}" \
+      "./${QCOW_TEMPLATE_FILE}"
+  else
+    ## create the upper overlay image if necessary
+    func_create_upper_overlay_image "${target}" "${UPPER_OVERLAY_NAME}" \
+      "${QCOW_FILE_SIZE}"
+  fi
+}
+
+## create upper overlay image if necessary
+func_create_upper_overlay_image(){ # target="$1"; image_name="$2"; size="$3"
+  local target image size
+  target="${1}"; image="${target}/${2}.img"; size="$3"
+
+  [ -f "${image}" ] || {
+    func_echo "- create image: ${image}"
+    [ -d "${target}" ] || mkdir -p "${target}"
+    func_qcow2_create "${image}" "${size}"
+  }
+}
+
+## copy existing upper overlay image if necessary
+func_copy_upper_overlay_image(){ # target="$1"; image_name="$2";
+                                 # qcow_template_file="$3"
+  local target image qcow_template_file
+  target="${1}"; image="${target}/${2}.img"; qcow_template_file="$3"
+
+  [ -f "${image}" ] || {
+    func_echo "- copy image: ${qcow_template_file} to ${image}"
+    [ -d "${target}" ] || mkdir -p "${target}"
+    cp "${qcow_template_file}" "${image}"
+  }
+}
+
+## -------------------------------------------------------------------------- ##
+func_mount_unionfs(){ # target="$1"; image_name="$2"; overlay_name="$3"; union_dir="$4"
+  local target image overlay_name
+  target="${1}"; image="${target}/${2}.img"; overlay_name="$3";
+  union_dir="${4}"
+
+  ## mount upper overlay dir
+  func_qcow2_mount "${image}"
+  ## mount system images if available
+  func_mountsystem "${target}" "${overlay_name}"
+  ## mount the 'union fs'
+  func_mountunion "${target}" "${overlay_name}" "${image}" "${union_dir}"
+}
+
+func_unmount_unionfs(){ # target="$1"; image_name="$2"; overlay_name="$3"; union_dir="$4"
+  local target image overlay_name
+  target="${1}"; image="${target}/${2}.img"; overlay_name="$3";
+  union_dir="${4}"
+
+  ## unmount the 'union fs'
+  func_unmountunion "${union_dir}"
+  ## unmount system images if available
+  func_unmountsystem "${target}" "${overlay_name}"
+  ## unmount upper overlay dir
+  func_qcow2_umount "${image}"
+}
+
+## -------------------------------------------------------------------------- ##
+func_mountsystem(){ # image_dir="$1"; overlay_name="$2"
+  local image_dir overlay_name image_list image mountpoint
+  image_dir="$1"; overlay_name="$2"
+
+  ## generate a list of all named images
+  image_list=$(find "${image_dir}" -maxdepth 1 \
+    -iname "${overlay_name}*" | sort -V)
+  ## mount
+  for image in ${image_list}; do
+    [ -r "${image}" ] || continue
+    ## mount the squashfs image
+    mountpoint="$(dirname "${image}")/${MOUNT_DIR}/$(basename "${image}")"
+    mkdir -p "${mountpoint}"
+    echo "=> Mount ${image} on ${mountpoint}"
+    sudo mount "${image}" "${mountpoint}" -t squashfs -o loop
+  done
+}
+
+func_unmountsystem(){ # image_dir="$1"; overlay_name="$2"
+  local mountpoint_dir overlay_name mountpoint_list mountpoint
+  mountpoint_dir="$1/${MOUNT_DIR}"; overlay_name="$2"
+
+  ## generate a list of all mountpoints
+  [ -d "${mountpoint_dir}" ] || return
+  mountpoint_list=$(find "${mountpoint_dir}" -maxdepth 1 \
+    -iname "${overlay_name}*" | sort -V)
+  ## unmount
+  for mountpoint in ${mountpoint_list}; do
+    ## unmount the squashfs image
+    echo "=> Unmount ${mountpoint}"
+    sudo umount "${mountpoint}"
+    rm -rf "${mountpoint}"
+  done
+
+  if [ -d "${mountpoint_dir}" ]; then
+    if [ -z "$(ls -A "${mountpoint_dir}")" ]; then
+      echo "=> Remove ${mountpoint_dir}"
+      rm -rf "${mountpoint_dir}"
+    fi
+  fi
+}
+
+## -------------------------------------------------------------------------- ##
+func_mountunion(){ # image_dir="$1"; overlay_name="$2"; image="$3"; union_dir="$4"
+  local mountpoint_dir overlay_name top_layer union_dir
+  mountpoint_dir="$1/${MOUNT_DIR}"; overlay_name="$2";
+  top_layer="${mountpoint_dir}/$(basename "$3")"; union_dir="$4"
+  [ -d "${union_dir}" ] || mkdir -p "${union_dir}"
+
+  if [ "${DEF_OVERLAY}" = "aufs" ]; then
+    ## if aufs will be used
+    ## --------------------
+    echo "- Setting up union using aufs"
+    local tree layer mountpoint_list
+
+    ## generate a list of all mountpoints
+    mountpoint_list=$(find "${mountpoint_dir}" -maxdepth 1 \
+      -iname "${overlay_name}*" | sort -V)
+    ## build overlay 'tree'
+    tree=""
+    for layer in ${mountpoint_list}; do
+      [ -d "$layer" ] && tree="$layer${tree:+:$tree}"
+    done
+    if [ -n "${tree}" ]; then
+      tree="br=${top_layer}:${tree}"
+    else
+      tree="br=${top_layer}"
+    fi
+    ## build mount union cmd
+    cmd="mount -t aufs -o $tree aufs ${union_dir}"
+  elif [ "${DEF_OVERLAY}" = "overlayfs" ]; then
+    ## if overlayfs will be used
+    ## -------------------------
+    echo "- Setting up union using overlayfs"
+    local upperdir workdir lowerdir
+
+    ## build overlay 'lowerdir','upperdir' and 'workdir'
+    lowerdir=$(find "${mountpoint_dir}" -maxdepth 1 \
+                    -iname "${overlay_name}*" | \
+                    sort -V | tac | tr '\n' ':' | sed -r 's/:$//')
+    upperdir="${top_layer}/rd_upper"; workdir="${top_layer}/rd_work"
+    [ -d "${upperdir}" ] || sudo mkdir -p "${upperdir}"
+    [ -d "${workdir}" ] || sudo mkdir -p "${workdir}"
+
+    ## build mount union cmd
+    cmd="mount -t overlay overlay -o lowerdir=${lowerdir},upperdir=${upperdir}"
+    cmd="${cmd},workdir=${workdir} ${union_dir}"
+  else
+    echo "!!! No overlayfs selected !!!"
+    return 1
+  fi
+
+  eval sudo "${cmd}"
+}
+
+func_unmountunion(){ # union_dir="$1"
+  local union_dir
+  union_dir="$1"
+  if mountpoint "${union_dir}"; then
+    echo "- Unmount unionfs"
+    sudo umount "${union_dir}"
+  fi
+  [ -d "${union_dir}" ] && rm -rf "${union_dir}"
+}
+
+## -------------------------------------------------------------------------- ##
+## MAIN:
+## -------------------------------------------------------------------------- ##
+## wrapper functions:
+[ "${FUNC_SCRIPT_HANDLING}" = "true" ] ||
+[ "${FUNC_SCRIPT_LOGGING_HANDLING}" = "true" ] ||
+{
+  func_echo(){ echo "$1"; }
+}
+
+## ########################################################################## ##

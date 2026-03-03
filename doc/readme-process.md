@@ -1,2 +1,0 @@
-# os-build process
-## TODO

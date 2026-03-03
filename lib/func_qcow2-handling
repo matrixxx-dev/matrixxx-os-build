@@ -1,0 +1,193 @@
+#!/bin/bash
+
+## ########################################################################## ##
+## qcow2 format file handling
+## - connect
+## - disconnect
+## - create
+## - create overlay
+##
+## https://wiki.qemu.org/Features/Qcow3
+## - when creating images, use the -o compat=[0.10|1.1] option to create an
+##   image in the non-default format version
+## - qemu-img amend can be used to upgrade or downgrade existing images
+##
+## - qemu-img convert -O qcow2 -o compat=1.1 disk-old.qcow2 disk.qcow2
+## ########################################################################## ##
+export FUNC_QCOW2_HANDLING="true"
+
+## definitions & initializations
+MOUNT_DIR="mnt"
+NBD_ARRAY=()
+
+## image format: raw, qcow2, ...
+FMT="qcow2"
+
+## filesystem format: ext4, ext2, vfat, f2fs, bfs, btrfs, ...
+FS="ext4"
+
+## -------------------------------------------------------------------------- ##
+## FUNCTIONS:
+## -------------------------------------------------------------------------- ##
+func_qcow2_mount(){ # image="$1"; create_mode="$2"
+  local image create_mode
+  image=$(realpath "$1"); create_mode="$2"
+
+  local index number mountpoint device filesystem
+  index=$(func_get_next_NBD_no)
+  mountpoint="$(dirname "${image}")/${MOUNT_DIR}/$(basename "${image}")"
+  device="/dev/nbd${index}"
+  filesystem="${FS}"
+
+  if lsblk --noempty --noheadings "${device}" >/dev/null 2>&1;then
+    echo "${device} is already connected"
+    return
+  fi
+
+  number=$(func_get_NBD_no "${image}")
+  if [ -n "${number}" ];then
+    echo "${image} is already connected"
+    return
+  else
+    func_ndb_connect "${index}" "${image}"
+    sleep 1
+    if [ "${create_mode}" = "true" ]; then
+      echo "=> Set ${filesystem} on ${device}"
+      sudo mkfs -t "${filesystem}" "${device}"
+    fi
+    echo "=> Mount ${image} (${device}) on ${mountpoint}"
+    [ -d "${mountpoint}" ] || mkdir -p "${mountpoint}"
+    sudo mount "${device}" "${mountpoint}"
+  fi
+}
+
+func_qcow2_umount(){  # image="$1"
+  local image
+  image=$(realpath "$1")
+
+  local index image mountpoint_dir mountpoint
+  index=""; index=$(func_get_NBD_no "${image}")
+  mountpoint_dir="$(dirname "${image}")/${MOUNT_DIR}"
+  mountpoint="${mountpoint_dir}/$(basename "${image}")"
+
+  echo "=> Unmount ${mountpoint}"
+  if mountpoint -q "${mountpoint}"; then
+    sudo umount "${mountpoint}"
+  fi
+  [ -d "${mountpoint}" ] && rm -rf "${mountpoint}"
+
+  if [ -d "${mountpoint_dir}" ]; then
+    if [ -z "$(ls -A "${mountpoint_dir}")" ]; then
+      echo "=> Remove ${mountpoint_dir}"
+      rm -rf "${mountpoint_dir}"
+    fi
+  fi
+  sleep 1
+  [ -n "${index}" ] && func_ndb_disconnect "${index}"
+}
+
+## -------------------------------------------------
+func_ndb_connect(){ # index="$1"; image="$2"
+  local index image device format
+  index="$1"; image="$2"
+  device="/dev/nbd${index}"
+  format="${FMT}"
+  echo "connect ${device}"
+  sudo qemu-nbd -f "${format}" --connect="${device}" "${image}"
+}
+
+func_ndb_disconnect(){ # index="$1"
+  local index device
+  index="$1"
+  device="/dev/nbd${index}"
+  echo "try to disconnect ${device}"
+  if lsblk --noempty --noheadings "${device}" >/dev/null 2>&1;then
+    echo "disconnect ${device}"
+    sudo qemu-nbd --disconnect "${device}"
+  fi
+}
+
+## -------------------------------------------------
+func_qcow2_create(){ # image="$1"; size="$2"
+  local image size dir format
+  image=$(realpath "$1"); size="$2"
+  dir=$(dirname "${image}")
+  format="${FMT}"
+
+  if [ -f "${image}" ]; then
+    echo "${image} is already created"
+  else
+    [ -d "${dir}" ] || mkdir -p "${dir}"
+    qemu-img create -f "${format}" "${image}" "${size}"
+    func_qcow2_mount "${image}" "true"
+    func_qcow2_umount "${image}"
+  fi
+}
+
+func_qcow2_create_overlay(){ # image="$1"; overlay_image="$2"
+  local image overlay_image format
+  image=$(realpath "$1"); overlay_image=$(realpath "$2")
+  format="${FMT}"
+
+  if [ -f "${image}" ]; then
+    [ -f "${overlay_image}" ] \
+      || qemu-img create -f "${format}" -b "${image}" \
+         -F "${format}" "${overlay_image}"
+  fi
+}
+
+## -------------------------------------------------
+func_qcow2_info(){ # image="$1"
+  local image
+  image="$1"
+  if [ -f "${image}" ]; then
+    qemu-img info --force-share "${image}"
+  else
+    echo "image ${image} does not exist"
+  fi
+}
+
+## -------------------------------------------------
+func_lsblk_nbd_array(){
+  local line line_array
+  local name fstype type size mountpoint
+
+  ## lsblk -A => lsblk --noempty
+  readarray -t NBD_ARRAY < <(lsblk -A -o NAME,FSTYPE,TYPE,SIZE,MOUNTPOINT | grep nbd)
+  for line in "${NBD_ARRAY[@]}"
+  do
+    read -r -a line_array <<< "${line}"
+    name="${line_array[0]}"
+    fstype="${line_array[1]}"
+    type="${line_array[2]}"
+    size="${line_array[3]}"
+    mountpoint="${line_array[4]}"
+    echo "name: ${name}"
+    echo "fstype: ${fstype}"
+    echo "type: ${type}"
+    echo "size: ${size}"
+    echo "mountpoint: ${mountpoint}"
+  done
+}
+
+func_get_next_NBD_no(){
+  readarray -t NBD_ARRAY < <(lsblk -A -o NAME,MOUNTPOINT | grep nbd)
+  echo "${#NBD_ARRAY[@]}"
+}
+
+func_get_NBD_no(){ # image="$1"
+  local image_check i line_array name mountpoint
+  image_check="$(dirname "$1")/${MOUNT_DIR}/$(basename "$1")"
+
+  readarray -t NBD_ARRAY < <(lsblk -A -o NAME,MOUNTPOINT | grep nbd)
+  for i in "${!NBD_ARRAY[@]}"
+  do
+    read -r -a line_array <<< "${NBD_ARRAY[i]}"
+    name="${line_array[0]}"
+    mountpoint="${line_array[1]}"
+    [ "${image_check}" = "${mountpoint}" ] || continue
+    echo "${name//*nbd/}"; return
+  done
+}
+
+## ########################################################################## ##
