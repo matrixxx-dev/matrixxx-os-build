@@ -51,13 +51,12 @@ func_configure_system_INSTALLATION(){ # base_dir="$1"
 
 ## save chroot /etc/resolv.conf and copy host /etc/resolv.conf
 func_resolv_handling_INSTALLATION(){ # base_dir="$1"
-  local base_dir file
-  base_dir="$1"
+  local base_dir dir file
+  base_dir="$1"; dir="etc"; file="resolv.conf"
 
   ## configure base system for installation
-  file="${base_dir}/etc/resolv.conf"
-  #sudo mv -f "${file}" "${file}.bak"
-  sudo cp -ax /etc/resolv.conf "${file}"
+  [ -d "${base_dir}/${dir}" ] || sudo mkdir -p "${base_dir}/${dir}"
+  sudo cp -ax "/${dir}/${file}" "${base_dir}/${dir}/${file}"
 }
 
 ## reset chroot environment on upper layer
@@ -66,7 +65,7 @@ func_configure_system_USAGE(){  # target="$1"; base_dir="$2";
   target="$1"; base_dir="$2"
 
   ## configure base system for usage
-  func_resolv_handling_USAGE "${base_dir}"
+  func_resolv_handling_USAGE "${target}" "${base_dir}"
 
   ## reset bash history file:
   sudo rm -f "${base_dir}"/root/.bash_history
@@ -88,14 +87,14 @@ func_configure_system_USAGE(){  # target="$1"; base_dir="$2";
 }
 
 ## restore chroot /etc/resolv.conf
-func_resolv_handling_USAGE(){  # base_dir="$1"
-  local base_dir file
-  base_dir="$1"
+func_resolv_handling_USAGE(){ # target="$1"; base_dir="$2"
+  local target base_dir dir file
+  target="$1"; base_dir="$2"; dir="etc"; file="resolv.conf"
 
   ## configure base system for usage
-  file="${base_dir}/etc/resolv.conf"
-  #sudo mv -f "${file}.bak" "${file}"
-  rm -f "${file}"
+  #sudo rm -f "${base_dir}/${dir}/${file}"
+  sudo tar -C "${base_dir}" \
+           -xzf "${target}/info/rootfs.tar.gz" "./${dir}/${file}"
 }
 
 ## -------------------------------------------------------------------------- ##
