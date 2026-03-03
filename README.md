@@ -27,6 +27,26 @@ toc: false
 #### links:
 - home page of [debian.org][debian]
 
+********************************************************************************
+> [!NOTE]
+> The markdown files contain a pandoc specific extension:
+> **yaml_metadata_block**. This block is displayed as a table by GitHub.
+
+> [!NOTE]
+> Regarding external links:
+> This website may contain links to external websites operated by third parties,
+> over which I have no control. Therefore, I cannot be held responsible for
+> the content of these external websites. The sole responsibility for the
+> content of these linked pages lies with the respective provider or operator.
+
+********************************************************************************
+> [!WARNING]
+> **DISCLAIMER:** THIS IS EXPERIMENTAL SOFTWARE. USE AT YOUR OWN RISK. THE
+> AUTHOR CAN NOT BE HELD LIABLE UNDER ANY CIRCUMSTANCES FOR DAMAGE TO HARDWARE
+> OR SOFTWARE, LOST DATA, OR OTHER DIRECT OR INDIRECT DAMAGE RESULTING FROM THE
+> USE OF THIS SOFTWARE.
+> YOU ARE RESPONSIBLE FOR YOUR OWN COMPLIANCE WITH ALL APPLICABLE LAWS.
+
 <!-- *********************************************************************** -->
 [debian]: https://www.debian.org
 [readme: about]: doc/readme-matrixxx.md
