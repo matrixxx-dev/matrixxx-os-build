@@ -37,11 +37,18 @@ func_pre_process_chroot(){ # union="$1"
 
   ## note: the postinst scripts of some packages may try to create
   ##       device files, so this option should only be used with care
-  echo "=> Mount bind: /proc /sys /dev"
-  for dir in proc sys dev; do
+  echo "=> Mount bind: /proc /sys /dev /dev/pts"
+  for dir in proc sys dev dev/pts; do
     [ -d "${union}/${dir}" ] || sudo mkdir "${union}/${dir}"
     sudo mount -o bind /"${dir}" "${union}/${dir}"
   done
+
+  ## note: mount
+  ##  Operations:
+  ##  -B, --bind      mount a subtree somewhere else (same as -o bind)
+  ##  -R, --rbind     mount a subtree and all submounts somewhere else
+  ##  --make-slave    mark a subtree as slave
+  ##  --make-rslave   recursively mark a whole subtree as slave
 }
 
 func_post_process_chroot(){ # union="$1"
@@ -49,8 +56,10 @@ func_post_process_chroot(){ # union="$1"
   union="${1}"
 
   sleep ${TIME}
-  echo "=> Umount bind: /dev /sys /proc"
-  for dir in proc sys dev; do
+  ## note: remember to umount ${union}/dev/pts, then umount ${union}/dev
+  ##       and the rest before unmounting ${union}.
+  echo "=> Umount bind: /dev/pts /dev /sys /proc"
+  for dir in dev/pts dev sys proc; do
     sudo umount "${union}/${dir}"
   done
   sleep ${TIME}
