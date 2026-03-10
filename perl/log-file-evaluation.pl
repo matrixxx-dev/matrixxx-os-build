@@ -59,10 +59,11 @@ close(FH);
 #print "Number of lines:", scalar(@lines), "\n";
 my $idx = 0;
 my $package;
+my $line_to_save="## found package:";
 foreach (@lines)
 {
   $idx++;
-  if ($_ =~ /^found package:/) { $package = $_; }
+  if ($_ =~ /^$line_to_save/) { $package = $_; }
 
   if ( $_ =~ m/$searchpattern/ )
   {

@@ -35,7 +35,7 @@ func_process_category_file(){
 
     for element in "${package_array[@]}"
     do
-      func_echo "found package: ${element}"
+      func_section; func_echo "## found package: ${element}"
       func_apt_get_package "${element}"
     done
 
