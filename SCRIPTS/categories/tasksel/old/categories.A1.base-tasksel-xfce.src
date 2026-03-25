@@ -4,14 +4,18 @@
 ## Debian packages:
 ## tasksel
 ##   (-> apt-get update)
-##   -> apt -a show task-lxde-desktop
-##      Depends:    tasksel (= 3.86), task-desktop, lightdm, lxde
-##      Recommends: lxtask, lxlauncher, xsane, libreoffice-gtk3, synaptic,
+##   -> apt -a show task-xfce-desktop
+##      Depends:    task-desktop, xfce4, lightdm
+##      Recommends: light-locker, xfce4-goodies, xfce4-power-manager,
+##                  xfce4-terminal, mousepad,
+##                  default-dbus-session-bus | dbus-session-bus,
+##                  xsane, parole, quodlibet, atril, tango-icon-theme,
+##                  network-manager-gnome, synaptic,
 ##                  libreoffice-writer, libreoffice-calc, libreoffice-impress,
 ##                  libreoffice-help-en-us, mythes-en-us, hunspell-en-us,
-##                  hyphen-en-us, system-config-printer, orca
+##                  hyphen-en-us, system-config-printer, orca, libreoffice-gtk3
 ##
-##     task-desktop => categories.A1.base-tasksel-desktop.src
+##     task-desktop => categories.A2.base-tasksel-desktop.src
 ## ########################################################################## ##
 myCLASS_DIR=(
 "TASKSEL"
@@ -22,19 +26,28 @@ myCLASS_DIR=(
 myPACKAGE_LIST_TASKSEL=(
 #Name                                         Beschreibung
 #============================================-================================================================================
-## task-lxde-desktop:
+## task-xfce-desktop:
+xfce4                                       # Meta-package for the Xfce Lightweight Desktop Environment
 lightdm                                     # Einfaches grafisches Login-Programm
-lxde                                        # metapackage for LXDE
 )
 
 myPACKAGE_LIST_TASKSEL_RECOMMENDS=(
 #Name                                         Beschreibung
 #============================================-================================================================================
-## task-lxde-desktop:
-lxtask                                      # LXDE-Prozessverwaltung
-lxlauncher                                  # LXDE launcher for netbooks
+## task-xfce-desktop:
+light-locker                                # Einfache Bildschirmsperre für den Displaymanager LightDM
+xfce4-goodies                               # enhancements for the Xfce4 Desktop Environment
+xfce4-power-manager                         # Energieverwaltung für die Arbeitsumgebung Xfce
+xfce4-terminal                              # Xfce-Terminalemulator
+mousepad                                    # Einfacher Xfce angepasster Texteditor
+dbus                                        # Einfaches Interprozess-Nachrichtensystem (Systemnachrichten-Bus)
+                                            # dbus  {-> dbus-bin dbus-daemon{-> dbus-session-bus-common} } dbus-system-bus-common
 xsane                                       # Grafische Oberfläche für SANE (Scanner Access Now Easy) mit vielen Fähigkeiten
-#libreoffice-gtk3                            # Büroprogrammsammlung -- GTK+-3-Integration
+parole                                      # Mediaplayer auf Grundlage des Rahmenwerks GStreamer
+quodlibet                                   # GTK3-Programm zum Verwalten und Abspielen von Audiobibliotheken
+atril                                       # MATE document viewer
+tango-icon-theme                            # Tango icon library
+#network-manager-gnome                       # Rahmenwerk zur Netzwerkverwaltung (GNOME-Oberfläche)
 synaptic                                    # Grafischer Paket-Verwalter
 #libreoffice-writer                          # Büroprogrammsammlung -- Textverarbeitung
 #libreoffice-calc                            # Büroprogrammsammlung -- Tabellenkalkulation
@@ -45,18 +58,14 @@ synaptic                                    # Grafischer Paket-Verwalter
 #hyphen-en-us                                # English (US) hyphenation patterns
 system-config-printer                       # Grafische Oberfläche für die Einrichtung des Drucksystems
 orca                                        # Programmierbarer Screen-Reader
+#libreoffice-gtk3                            # Büroprogrammsammlung -- GTK+-3-Integration
 )
 
-## no part of the tasksel packages for lxde
+## no part of the tasksel packages for xfce
 myPACKAGE_LIST_EXTENDED=(
 #Name                                         Beschreibung
 #============================================-================================================================================
-gnome-themes-extra                          # GTK-2-Theme Adwaita - Engine
-libgail-common                              # GNOME Accessibility Implementation Library -- common modules
-obconf                                      # Verwaltung der Präferenzen für den Fenstermanager Openbox
-xcursor-themes                              # Base X cursor themes
-speech-dispatcher-espeak                    # Schnittstelle zu Sprachsynthesizern - Ausgabemodul für eSpeak
-                                            # <- orca loads speech-dispatcher but no output module
+
 )
 
 ## ########################################################################## ##

@@ -1,0 +1,18 @@
+$ apt -a show task-xfce-desktop
+
+Package: task-xfce-desktop
+Version: 3.81
+Priority: optional
+Section: tasks
+Source: tasksel
+Maintainer: Debian Install System Team <debian-boot@lists.debian.org>
+Installed-Size: 9.216 B
+Depends: tasksel (= 3.81), task-desktop, xfce4, lightdm
+Recommends: light-locker, xfce4-goodies, xfce4-power-manager, xfce4-terminal, mousepad, default-dbus-session-bus | dbus-session-bus, xsane, parole, quodlibet, atril, tango-icon-theme, network-manager-applet, nm-connection-editor, synaptic, libreoffice-writer, libreoffice-calc, libreoffice-impress, libreoffice-help-en-us, mythes-en-us, hunspell-en-us, hyphen-en-us, system-config-printer, orca, libreoffice-gtk3
+Download-Size: 1.308 B
+APT-Sources: https://debian.inf.tu-dresden.de/debian stable/main amd64 Packages
+Description: Xfce
+ This task package is used to install the Debian desktop, featuring
+ the Xfce desktop environment, and with other packages that Debian users
+ expect to have available on the desktop.
+

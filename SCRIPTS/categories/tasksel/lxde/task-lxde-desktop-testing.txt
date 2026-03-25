@@ -1,0 +1,17 @@
+$ apt -a show task-lxde-desktop
+
+Package: task-lxde-desktop
+Version: 3.86
+Priority: optional
+Section: tasks
+Source: tasksel
+Maintainer: Debian Install System Team <debian-boot@lists.debian.org>
+Installed-Size: 9.216 B
+Depends: tasksel (= 3.86), task-desktop, lightdm, lxde
+Recommends: lxtask, lxlauncher, xsane, libreoffice-gtk3, synaptic, libreoffice-writer, libreoffice-calc, libreoffice-impress, libreoffice-help-en-us, mythes-en-us, hunspell-en-us, hyphen-en-us, system-config-printer, orca
+Download-Size: 1.204 B
+APT-Sources: https://debian.inf.tu-dresden.de/debian testing/main amd64 Packages
+Description: LXDE
+ This task package is used to install the Debian desktop, featuring
+ the LXDE desktop environment, and with other packages that Debian users
+ expect to have available on the desktop.

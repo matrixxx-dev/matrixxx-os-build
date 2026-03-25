@@ -4,14 +4,15 @@
 ## Debian packages:
 ## tasksel
 ##   (-> apt-get update)
-##   -> apt -a show task-lxde-desktop
-##      Depends:    tasksel (= 3.86), task-desktop, lightdm, lxde
-##      Recommends: lxtask, lxlauncher, xsane, libreoffice-gtk3, synaptic,
+##   -> apt -a show task-lxqt-desktop
+##      Depends:    tasksel (= 3.86), task-desktop,
+##                  sddm-theme-debian-elarun | sddm-theme, sddm, lxqt
+##      Recommends: xsane, orca, libreoffice-gtk3, libreoffice-qt6, synaptic,
 ##                  libreoffice-writer, libreoffice-calc, libreoffice-impress,
 ##                  libreoffice-help-en-us, mythes-en-us, hunspell-en-us,
-##                  hyphen-en-us, system-config-printer, orca
+##                  hyphen-en-us, system-config-printer
 ##
-##     task-desktop => categories.A1.base-tasksel-desktop.src
+##     task-desktop => categories.A2.base-tasksel-desktop.src
 ## ########################################################################## ##
 myCLASS_DIR=(
 "TASKSEL"
@@ -22,19 +23,28 @@ myCLASS_DIR=(
 myPACKAGE_LIST_TASKSEL=(
 #Name                                         Beschreibung
 #============================================-================================================================================
-## task-lxde-desktop:
-lightdm                                     # Einfaches grafisches Login-Programm
-lxde                                        # metapackage for LXDE
+## task-lxqt-desktop:
+## sddm-themes: sddm-theme-breeze
+##              sddm-theme-debian-breeze
+##              sddm-theme-debian-elarun
+##              sddm-theme-debian-maui
+##              sddm-theme-elarun
+##              sddm-theme-maldives
+##              sddm-theme-maui
+##              sddm-theme-maya
+sddm-theme-debian-elarun                    # 'Debian Elarun' Theme for SDDM X11 display manager
+sddm                                        # Moderner Displaymanager für X11
+lxqt                                        # metapackage for LXDE
 )
 
 myPACKAGE_LIST_TASKSEL_RECOMMENDS=(
 #Name                                         Beschreibung
 #============================================-================================================================================
 ## task-lxde-desktop:
-lxtask                                      # LXDE-Prozessverwaltung
-lxlauncher                                  # LXDE launcher for netbooks
 xsane                                       # Grafische Oberfläche für SANE (Scanner Access Now Easy) mit vielen Fähigkeiten
+orca                                        # Programmierbarer Screen-Reader
 #libreoffice-gtk3                            # Büroprogrammsammlung -- GTK+-3-Integration
+#libreoffice-qt5                             # office productivity suite -- Qt 5 integration
 synaptic                                    # Grafischer Paket-Verwalter
 #libreoffice-writer                          # Büroprogrammsammlung -- Textverarbeitung
 #libreoffice-calc                            # Büroprogrammsammlung -- Tabellenkalkulation
@@ -44,19 +54,13 @@ synaptic                                    # Grafischer Paket-Verwalter
 #hunspell-en-us                              # Hunspell-Wörterbuch für amerikanisches Englisch
 #hyphen-en-us                                # English (US) hyphenation patterns
 system-config-printer                       # Grafische Oberfläche für die Einrichtung des Drucksystems
-orca                                        # Programmierbarer Screen-Reader
 )
 
-## no part of the tasksel packages for lxde
+## no part of the tasksel packages for lxqt
 myPACKAGE_LIST_EXTENDED=(
 #Name                                         Beschreibung
 #============================================-================================================================================
-gnome-themes-extra                          # GTK-2-Theme Adwaita - Engine
-libgail-common                              # GNOME Accessibility Implementation Library -- common modules
-obconf                                      # Verwaltung der Präferenzen für den Fenstermanager Openbox
-xcursor-themes                              # Base X cursor themes
-speech-dispatcher-espeak                    # Schnittstelle zu Sprachsynthesizern - Ausgabemodul für eSpeak
-                                            # <- orca loads speech-dispatcher but no output module
+
 )
 
 ## ########################################################################## ##

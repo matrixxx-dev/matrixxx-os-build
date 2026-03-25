@@ -2,9 +2,14 @@
 
 ## ########################################################################## ##
 ## Debian packages:
+## - no systemd
 ## - difference between debootstrap "variant=minbase" and "variant="
 ## apt-get install --yes --no-install-recommends
 ##
+## ########################################################################## ##
+## check diff.:
+## -> debootstrap --print-debs --variant=minbase stable ./test > debootstrap-minibase.txt
+## -> debootstrap --print-debs stable ./test > debootstrap.txt
 ## ########################################################################## ##
 myCLASS_DIR=(
 "INSTALL_SYSVINIT"
@@ -23,36 +28,44 @@ sysvinit-core                               # System-Initialisierung ähnlich UN
 myPACKAGE_LIST_INSTALL_DEBOOTSTRAP=(
 #Name                                         Beschreibung
 #============================================-================================================================================
+#adduser                                     # Erstellt und entfernt Benutzer und Gruppen
+                                             # -> added to minbase
 #apt-utils                                   # package management related utility programs
+                                             # -> see B1.expanded
 cpio                                        # GNU cpio -- a program to manage archives of files
-#cron                                        # process scheduling daemon
-#cron-daemon-common                          # process scheduling daemon's configuration files
+cron                                        # process scheduling daemon
+cron-daemon-common                          # process scheduling daemon's configuration files
 debconf-i18n                                # full internationalization support for debconf
+dhcpcd-base                                 # DHCPv4 and DHCPv6 dual-stack client (binaries and exit hooks)
 dmidecode                                   # SMBIOS/DMI table decoder
-dmsetup                                     # Linux Kernel Device Mapper userspace library
+#removed# dmsetup                                     # Linux Kernel Device Mapper userspace library
+e2fsprogs                                   # ext2/ext3/ext4 file system utilities
 fdisk                                       # collection of partitioning utilities
 ifupdown                                    # high level tools to configure network interfaces
 init                                        # metapackage ensuring an init system is installed
 iproute2                                    # networking and traffic control tools
 iputils-ping                                # Tools to test the reachability of network hosts
-isc-dhcp-client                             # DHCP client for automatically obtaining an IP address
-isc-dhcp-common                             # common manpages relevant to all of the isc-dhcp packages
+#removed# isc-dhcp-client                             # DHCP client for automatically obtaining an IP address
+#removed# isc-dhcp-common                             # common manpages relevant to all of the isc-dhcp packages
 kmod                                        # tools for managing Linux kernel modules
 less                                        # pager program similar to more
 libapparmor1                                # changehat AppArmor library
-libargon2-1                                 # memory-hard hashing function - runtime library
+#removed# libargon2-1                                 # memory-hard hashing function - runtime library
 libbpf1                                     # eBPF helper library (shared library)
-libbsd0                                     # utility functions from BSD systems - shared library
+#removed# libbsd0                                     # utility functions from BSD systems - shared library
 libcap2-bin                                 # POSIX 1003.1e capabilities (utilities)
-libcryptsetup12                             # disk encryption support - shared library
-libdevmapper1.02.1                          # Linux Kernel Device Mapper userspace library
+libcom-err2                                 # common error description library
+#removed# libcryptsetup12                             # disk encryption support - shared library
+#removed# libdevmapper1.02.1                          # Linux Kernel Device Mapper userspace library
 libedit2                                    # BSD editline and history libraries
-#libelf1                                     # library to read and write ELF files
+libelf1t64                                  # library to read and write ELF files
+libext2fs2t64                               # ext2/ext3/ext4 file system libraries
 libfdisk1                                   # fdisk partitioning library
 libgssapi-krb5-2                            # MIT Kerberos runtime libraries - krb5 GSS-API Mechanism
-libip4tc2                                   # netfilter libip4tc library
+libidn2-0                                   # Internationalized domain names (IDNA2008/TR46) library
+#removed# libip4tc2                                   # netfilter libip4tc library
 libjansson4                                 # C library for encoding, decoding and manipulating JSON data
-libjson-c5                                  # JSON manipulation library - shared library
+#removed# libjson-c5                                  # JSON manipulation library - shared library
 libk5crypto3                                # MIT Kerberos runtime libraries - Crypto Library
 libkeyutils1                                # Linux Key Management Utilities (library)
 libkmod2                                    # libkmod shared library
@@ -66,26 +79,30 @@ libnftables1                                # Netfilter nftables high level user
 libnftnl11                                  # Netfilter nftables userspace API library
 libpopt0                                    # lib for parsing cmdline parameters
 libproc2-0                                  # library for accessing process information from /proc
-#libreadline8                                # GNU readline and history libraries, run-time libraries
+libreadline8t64                             # GNU readline and history libraries, run-time libraries
 libslang2                                   # S-Lang programming library - runtime version
-#libsystemd-shared                           # systemd shared private library
+libss2                                      # command-line interface parsing library
+#unused# libsystemd-shared                           # systemd shared private library
 libtext-charwidth-perl                      # get display widths of characters on the terminal
 libtext-iconv-perl                          # module to convert between character sets in Perl
 libtext-wrapi18n-perl                       # internationalized substitute of Text::Wrap
 libtirpc-common                             # transport-independent RPC library - common files
-#libtirpc3                                   # transport-independent RPC library
+libtirpc3t64                                # transport-independent RPC library
+libunistring5                               # Unicode string library for C
 libxtables12                                # netfilter xtables library
+linux-sysctl-defaults                       # default sysctl configuration for Linux
 logrotate                                   # Log rotation utility
+logsave                                     # save the output of a command in a log file
 nano                                        # small, friendly text editor inspired by Pico
 netbase                                     # Basic TCP/IP networking system
 nftables                                    # Program to control packet filtering rules by Netfilter project
 procps                                      # /proc file system utilities
 readline-common                             # GNU readline and history libraries, common files
 sensible-utils                              # Utilities for sensible alternative selection
-#systemd                                     # system and service manager
-#systemd-sysv                                # system and service manager - SysV compatibility symlinks
-#tasksel                                     # tool for selecting tasks for installation on Debian systems
-#tasksel-data                                # official tasks used for installation of Debian systems
+#unused# systemd                                     # system and service manager
+#unused# systemd-sysv                                # system and service manager - SysV compatibility symlinks
+#removed# tasksel                                     # tool for selecting tasks for installation on Debian systems
+#removed# tasksel-data                                # official tasks used for installation of Debian systems
 udev                                        # /dev/ and hotplug management daemon
 vim-common                                  # Vi IMproved - Common files
 vim-tiny                                    # Vi IMproved - enhanced vi editor - compact version

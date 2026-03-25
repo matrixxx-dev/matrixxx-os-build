@@ -165,7 +165,7 @@ helvum                                      # GTK patchbay for pipewire
 imagemagick                                 # image manipulation programs -- binaries
 "inkscape inkscape-open-symbols"            # vector-based drawing program
 inkscape-tutorials                          # Vektorbasiertes Zeichenprogramm - Anleitungen
-kimageformat-plugins                        # Zusätzliche Bildformat-Plugins für QtGui
+#kimageformat-plugins                        # Zusätzliche Bildformat-Plugins für QtGui
 lame                                        # MP3 encoding library (frontend)
 libavif-bin                                 # Bibliothek zur Verarbeitung von .avif-Dateien (Dienstprogramme)
 libavif-gdk-pixbuf                          # Library for handling .avif files (GDK pixbuf plugin)
@@ -175,8 +175,6 @@ mpv                                         # video player based on MPlayer/mpla
 obs-studio                                  # recorder and streamer for live video content
 obs-plugins                                 # recorder and streamer for live video content (plugins)
 "openshot-qt openshot-qt-doc"               # Erzeugt und bearbeitet Videos und Filme
-pavucontrol-qt                              # Qt port of volume control pavucontrol
-pavucontrol-qt-l10n                         # Language package for pavucontrol-qt
 qpwgraph                                    # User interface for controlling the PipeWire Graph
 gwenview                                    # image viewer
 rawtherapee                                 # Umwandler für RAW-Bilder und Bearbeitungssoftware für Digitalfotos

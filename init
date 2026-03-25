@@ -13,7 +13,8 @@ source ./lib/func_chroot-handling
 source ./lib/func_layer-handling
 
 ## -------------------------------------------------------------------------- ##
-TARGET_NAME="matrixxx_00"     # --variant=minbase
+#TARGET_NAME="matrixxx_00"     # --variant=minbase
+TARGET_NAME="matrixxx_01"     # --variant=minbase
 
 SELECTOR_ARRAY=("A" "B" "C")
 #SELECTOR_ARRAY=("D")

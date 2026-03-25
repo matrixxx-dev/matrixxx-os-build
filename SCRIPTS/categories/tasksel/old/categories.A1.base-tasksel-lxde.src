@@ -5,7 +5,7 @@
 ## tasksel
 ##   (-> apt-get update)
 ##   -> apt -a show task-lxde-desktop
-##      Depends:    tasksel (= 3.86), task-desktop, lightdm, lxde
+##      Depends:    task-desktop, lightdm, lxde
 ##      Recommends: lxtask, lxlauncher, xsane, libreoffice-gtk3, synaptic,
 ##                  libreoffice-writer, libreoffice-calc, libreoffice-impress,
 ##                  libreoffice-help-en-us, mythes-en-us, hunspell-en-us,

@@ -146,7 +146,7 @@ bash-doc                                    # Documentation and examples for the
 breeze-cursor-theme                         # Default Plasma cursor theme
 busybox                                     # Tiny utilities for small and embedded systems
 #chrony                                      # Vielseitige Implementierung des Network Time Protocol
-                                            # in Konflikt mit: ntpsec
+                                             # in Konflikt mit: ntpsec
 console-common                              # Basisinfrastruktur zur Konfiguration von Textkonsolen
 console-setup                               # console font and keymap setup program
 console-setup-linux                         # Linux specific part of console-setup
@@ -170,7 +170,6 @@ notification-daemon                         # daemon for displaying passive pop-
 nodm                                        # automatic display manager
 ntfs-3g                                     # read/write NTFS driver for FUSE
 "ntpsec ntpsec-doc"                         # Daemon und Hilfsprogramme für das Network Time Protocol & Dokumentation
-                                            # in Konflikt mit: chrony
 #ntpsec-ntpdig                               # ntpdig SNTP client
 parted                                      # disk partition manipulator
 parted-doc                                  # Partitionsmanipulator - Dokumentation
@@ -182,6 +181,8 @@ pipewire-audio                              # recommended set of PipeWire packag
 pulseaudio-utils                            # Befehlszeilenwerkzeuge für den Soundserver PulseAudio
 # pavucontrol after pipewire-audio
 pavucontrol                                 # PulseAudio Volume Control
+pavucontrol-qt                              # Qt port of volume control pavucontrol
+pavucontrol-qt-l10n                         # Language package for pavucontrol-qt
 pxelinux                                    # Sammlung von Boot-Loadern (Boot-Loader für PXE-Firmware)
 squashfs-tools                              # Werkzeug zum Erzeugen und Hinzufügen von squashfs-Dateisystemen
 squashfs-tools-ng                           # New set of tools for working with SquashFS images

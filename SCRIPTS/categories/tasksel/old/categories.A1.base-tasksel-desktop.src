@@ -5,12 +5,13 @@
 ## tasksel
 ##   (-> apt-get update)
 ##   -> apt -a show task-desktop
-##      Depends:    tasksel (= 3.86), desktop-base
+##      Depends:    xorg, xserver-xorg-video-all, xserver-xorg-input-all,
+##                  desktop-base
 ##      Recommends: task-*-desktop(s)
-##                  (* gnome xfce kde lxde gnome-flashback cinnamon mate lxqt
-##                   lomiri phosh)
+##                  (* gnome xfce kde lxde gnome-flashback cinnamon mate lxqt)
 ##                  xdg-utils, fonts-symbola, avahi-daemon, libnss-mdns,
-##                  anacron, eject, iw, alsa-utils, sudo, cups
+##                  anacron, eject, iw, alsa-utils, sudo,
+##                  firefox | firefox-esr, cups
 ##
 ## ########################################################################## ##
 myCLASS_DIR=(
@@ -22,6 +23,9 @@ myPACKAGE_LIST_TASKSEL=(
 #Name                                         Beschreibung
 #============================================-================================================================================
 ## task-desktop:
+xorg                                        # X.Org X Window System
+xserver-xorg-video-all                      # X.org-X-Server -- Metapaket für Ausgabegerätetreiber
+xserver-xorg-input-all                      # X.org-X-Server -- Metapaket für Eingabegeräte-Treiber
 desktop-base                                # Allgemeine Dateien für den Debian-Desktop
 )
 
@@ -38,6 +42,8 @@ eject                                       # ejects CDs and operates CD-Changer
 iw                                          # Konfigurationswerkzeug für kabellose Linux-Geräte
 alsa-utils                                  # Dienstprogramme für Konfiguration und Verwendung von ALSA
 sudo                                        # Gewährt begrenzte Root-Privilegien für bestimmte Benutzer
+#firefox-esr                                 # Webbrowser Mozilla Firefox mit verlängerter Wartung (Extended Support Release, ESR)
+#firefox                                     # Webbrowser Mozilla Firefox
 cups                                        # Common UNIX Printing System(tm) - PPD-/Treiber-Unterstützung, Webschnittstelle
 )
 

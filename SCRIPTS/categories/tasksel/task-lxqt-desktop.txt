@@ -1,0 +1,49 @@
+$ apt -a show task-lxqt-desktop
+
+Package: task-lxqt-desktop
+Version: 3.87
+Priority: optional
+Section: tasks
+Source: tasksel
+Maintainer: Debian Install System Team <debian-boot@lists.debian.org>
+Installed-Size: 9.216 B
+Depends: tasksel (= 3.87), task-desktop, sddm-theme-debian-elarun | sddm-theme, sddm, lxqt
+Recommends: xsane, orca, libreoffice-gtk3, libreoffice-qt6, synaptic, libreoffice-writer, libreoffice-calc, libreoffice-impress, libreoffice-help-en-us, mythes-en-us, hunspell-en-us, hyphen-en-us, system-config-printer
+Download-Size: 1.208 B
+APT-Sources: https://debian.inf.tu-dresden.de/debian unstable/main amd64 Packages
+Description: LXQt
+ This task package is used to install the Debian desktop, featuring
+ the LXQt desktop environment, and with other packages that Debian users
+ expect to have available on the desktop.
+
+Package: task-lxqt-desktop
+Version: 3.86
+Priority: optional
+Section: tasks
+Source: tasksel
+Maintainer: Debian Install System Team <debian-boot@lists.debian.org>
+Installed-Size: 9.216 B
+Depends: tasksel (= 3.86), task-desktop, sddm-theme-debian-elarun | sddm-theme, sddm, lxqt
+Recommends: xsane, orca, libreoffice-gtk3, libreoffice-qt6, synaptic, libreoffice-writer, libreoffice-calc, libreoffice-impress, libreoffice-help-en-us, mythes-en-us, hunspell-en-us, hyphen-en-us, system-config-printer
+Download-Size: 1.208 B
+APT-Sources: https://debian.inf.tu-dresden.de/debian testing/main amd64 Packages
+Description: LXQt
+ This task package is used to install the Debian desktop, featuring
+ the LXQt desktop environment, and with other packages that Debian users
+ expect to have available on the desktop.
+
+Package: task-lxqt-desktop
+Version: 3.81
+Priority: optional
+Section: tasks
+Source: tasksel
+Maintainer: Debian Install System Team <debian-boot@lists.debian.org>
+Installed-Size: 9.216 B
+Depends: tasksel (= 3.81), task-desktop, sddm-theme-debian-elarun | sddm-theme, sddm, lxqt
+Recommends: xsane, orca, libreoffice-gtk3, libreoffice-qt5, synaptic, libreoffice-writer, libreoffice-calc, libreoffice-impress, libreoffice-help-en-us, mythes-en-us, hunspell-en-us, hyphen-en-us, system-config-printer
+Download-Size: 1.212 B
+APT-Sources: https://debian.inf.tu-dresden.de/debian stable/main amd64 Packages
+Description: LXQt
+ This task package is used to install the Debian desktop, featuring
+ the LXQt desktop environment, and with other packages that Debian users
+ expect to have available on the desktop.
