@@ -13,11 +13,10 @@ source ./lib/func_chroot-handling
 source ./lib/func_layer-handling
 
 ## -------------------------------------------------------------------------- ##
-#TARGET_NAME="matrixxx_00"     # --variant=minbase
-TARGET_NAME="matrixxx_01"     # --variant=minbase
+TARGET_NAME="matrixxx_00_lxde"
 
-SELECTOR_ARRAY=("A" "B" "C")
-#SELECTOR_ARRAY=("D")
+SELECTOR_ARRAY=("A" "B" "C" "D")
+#SELECTOR_ARRAY=("N")
 
 ## -------------------------------------------------------------------------- ##
 declare -A ARCHITECTURE_ARRAY=(

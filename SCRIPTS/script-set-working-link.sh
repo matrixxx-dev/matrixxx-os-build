@@ -1,37 +1,36 @@
-#!/bin/bash
+#! /bin/bash
 
 ## ########################################################################## ##
-## umount squashfs (virtual device):
+##
+## generate working dir link
 ##
 ## ########################################################################## ##
-## start script with sudo:
-#[ "$(id -u)" != "0" ] && exec sudo "$0" "$@"
-
-## includes
-source ./init
-source ./lib/func_virtual-device-handling
+DIR="categories_standard"
 
 ## -------------------------------------------------------------------------- ##
 ## FUNCTIONS:
 ## -------------------------------------------------------------------------- ##
-func_process(){ # arch="$1"
-  func_umount_virtual_devices "${TARGET_NAME}/$1"
+## create a working link
+func_gen_working_dir_link(){ # dir="$1"; link="$2"
+  local dir link
+  dir="$1"; link="$2"
+
+  ## remove existing link
+  [ -d "${link}" ] && rm -f "${link}"
+
+  ## bild new link
+  ln -s "${dir}" "${link}"
+  echo "- ${link} -> ${dir}"
 }
 
-func_umount_process(){
-  ## separation of possible architectures
-  func_arch_process
-}
+## -------------------------------------------------------------------------- ##
+## MAIN
+## -------------------------------------------------------------------------- ##
+func_gen_working_dir_link "${DIR}" "categories"
+
 
 ## -------------------------------------------------------------------------- ##
-## MAIN:
-## -------------------------------------------------------------------------- ##
-## process
-echo "TARGET_NAME: ${TARGET_NAME}"
-func_umount_process
-
-## -------------------------------------------------------------------------- ##
-## pause:
+## Pause:
 echo "Press enter to continue..."; read -r
 
 ## ########################################################################## ##

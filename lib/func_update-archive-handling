@@ -6,7 +6,7 @@
 ## note: matrixxx has two remastering file types
 ##       1. 'update' archives (update_*.tar.gz  update_*.taz update_*.zip)
 ##          which can be overlayed over '/' (root)
-##          - shortly before the system init call
+##          - shortly before the system init call (initramfs)
 ##       2. a squasfs image file which will be included in the union fs
 ##       generation of both forms are made possible by this library
 ##
