@@ -11,7 +11,7 @@ toc: false
   - as well as the selection of the debian suite (stable testing unstable
     experimental) and the possible software categories (main contrib
     non-free non-free-firmware)
-- The result are several squasfs images which contains a customized os
+- The result are several squashfs images which contains a customized os
   for x86 32-bit and 64-bit versions
 
 ## Other necessary components:

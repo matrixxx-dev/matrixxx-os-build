@@ -7,7 +7,7 @@
 export FUNC_LAYER_HANDLING="true"
 
 ## include:
-source ./lib/func_mk-squasfs-image-handling
+source ./lib/func_mk-squashfs-image-handling
 
 ## define:
 LOG_FILE_CREATE_LAYER="xx-create-LAYER"
