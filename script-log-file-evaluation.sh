@@ -10,6 +10,7 @@
 source ./init
 
 ## definitions
+[ -n "$1" ] && TARGET_NAME="$1"     ## overwrite if desired
 SCRIPT_PATH="$PWD"
 
 ## -------------------------------------------------------------------------- ##

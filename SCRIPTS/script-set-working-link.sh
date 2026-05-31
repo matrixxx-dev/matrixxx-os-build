@@ -16,7 +16,7 @@ func_gen_working_dir_link(){ # dir="$1"; link="$2"
   dir="$1"; link="$2"
 
   ## remove existing link
-  [ -d "${link}" ] && rm -f "${link}"
+  [ -L "${link}" ] && rm -f "${link}"
 
   ## bild new link
   ln -s "${dir}" "${link}"

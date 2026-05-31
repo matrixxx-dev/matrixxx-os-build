@@ -1,7 +1,9 @@
 #!/usr/bin/perl -w
 
 ## ########################################################################## ##
-## Get clipboard content
+## log file processing
+## - searching for patterns in sections of a log file
+## - output: section (`found package`) and line of found pattern
 ##
 ## ########################################################################## ##
 ## note:
