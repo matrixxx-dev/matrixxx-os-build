@@ -15,7 +15,8 @@ source ./lib/func_layer-handling
 ## -------------------------------------------------------------------------- ##
 TARGET_NAME="matrixxx_00_lxde"
 
-SELECTOR_ARRAY=("A" "B" "C" "D")
+## see /SCRIPTS/categories/init
+#SELECTOR_ARRAY=("A" "B" "C" "D")
 #SELECTOR_ARRAY=("N")
 
 ## -------------------------------------------------------------------------- ##

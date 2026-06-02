@@ -13,19 +13,18 @@ TIME=1
 ## FUNCTIONS:
 ## -------------------------------------------------------------------------- ##
 ## call a script in chroot environment
-## note: func_chroot_call_script don't allow script parameters
-func_chroot_call_script(){ # union="$1"; script_name="$2"
+func_chroot_call_script(){ # union="$1"; script_name="$2" -- $@
   local union script_name
   union="$1"; script_name="$2"
   if [ -x "${union}${script_name}" ]; then
-    func_chroot_cmd "${union}" "${script_name}" || return 1
+    func_chroot_cmd "$@" || return 1
   fi
 }
 
 ## call a cmd in chroot environment
-func_chroot_cmd(){ # union="$1"; cmd="$2"
+func_chroot_cmd(){ # union="$1" -- $@
   local cmd
-  cmd="sudo chroot ${1} ${2}"
+  cmd="sudo chroot $*"
   func_echo ""; func_echo "### ${cmd}"
   eval "${cmd}" || return 1
 }

@@ -133,21 +133,25 @@ func_process_call_scripts(){ # union="$1"
   local union id dir i
   union="$1"; id="${SCRIPT_SELECTOR}"; dir="SCRIPTS"
 
-  func_echo_base_topic "call chroot scripts (selector: ${id}):"
+  ls "${union}"/"${dir}"/categories/"${id}"* && {
+    func_echo_base_topic "call chroot scripts (selector: ${id}):"
 
-  func_chroot_cmd "${union}" "/${dir}/script-update.sh ${id}" \
-    || func_echo "update error!"
+    func_chroot_cmd "${union}" "/${dir}/script-update.sh ${id}" \
+      || func_echo "update error!"
 
-  func_chroot_call_script "${union}" "/${dir}/${id}0-basical-config.sh" \
-    && LAYER_BUILD_MARKER="true"   # build a Layer
+    for ((i=1;i<=3;i++)); do
+      [ -f "${union}/${dir}/categories/${id}${i}-category-file-list" ] &&
+      {
+        func_chroot_call_script "${union}" "/${dir}/script-apt-handler.sh" "${id}${i}" \
+          && LAYER_BUILD_MARKER="true"   # build a Layer
+      }
+    done
+  }
 
-  for ((i=1;i<=3;i++)); do
-    func_chroot_call_script "${union}" "/${dir}/${id}${i}-apt-handler.sh" \
-      && LAYER_BUILD_MARKER="true"   # build a Layer
-  done
-
-  func_chroot_call_script "${union}" "/${dir}/script-clean_up_package_lists.sh" \
-    || func_echo "clean_up error!"
+  [ "${LAYER_BUILD_MARKER}" = "true" ] && {
+    func_chroot_call_script "${union}" "/${dir}/script-clean_up_package_lists.sh" \
+      || func_echo "clean_up error!"
+  }
 }
 
 ## -------------------------------------------------------------------------- ##

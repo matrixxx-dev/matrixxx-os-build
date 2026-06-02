@@ -7,6 +7,7 @@
 
 ## integration
 source ./init
+[ -f ./SCRIPTS/categories/init ] && source ./SCRIPTS/categories/init
 
 ## -------------------------------------------------------------------------- ##
 ## FUNCTIONS:

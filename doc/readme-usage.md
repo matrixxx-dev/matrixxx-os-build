@@ -26,6 +26,17 @@ toc: false
 > The base desktop environment is intended to be `LXDE` or `LXQT`.
 > (All these default settings can be adjusted with minimal effort)
 
+### Configuration of the OS
+- As an example, `categories_standard` in the `/SCRIPTS` subdirectory should
+  be used here, which must be unpacked here from the release
+- Check whether the `categories` link points to this directory.
+  (This can be done with the bash script `script-set-working-link.sh`.
+  This can also be done with your own directories - all you have to do is
+  to insert the name into the script)
+- Currently the structure is designed so that four `qcow` images
+  (with scripts A-D) + an additional (N) for testing new features can be
+  created. The layers that are created count from 1-5.
+
 ### Script structure:
 ```
 .
@@ -136,6 +147,17 @@ toc: false
 > Als Basis OS Erzeugung wird `debootstrap --variant=minbase` verwendet.
 > Als Basis Desktop Umgebung ist `LXDE` oder `LXQT` vorgesehen.
 > (All diese Voreinstellungen sind mit wenig aufwand anpassbar)
+
+### Konfiguration der OS
+- Beispielhaft soll hier `categories_standard` im Unterverzeichnis `/SCRIPTS`
+  dienen welches vom Release hierhin entpackt werden muss
+- Es ist zu überprüfen, ob der Link `categories` auf dieses Verzeichnis zeigt.
+  (Mit dem Bash-Skript `script-set-working-link.sh` lässt sich dies
+  durchführen. Im übrigen lässt sich dies auch mit eigenen Verzeichnissen
+  durchführen - dazu ist nur der Name in das Skript einzufügen)
+- Momentan ist die Struktur so ausgelegt, dass vier `qcow`-Images
+  (mit Skripten A-D) + einem zusätzlichen (N) für Tests von Neuerungen
+  erzeugt werden können. Die Layer die dabei entstehen zählen von 1-5.
 
 ********************************************************************************
 > [!WARNING]
