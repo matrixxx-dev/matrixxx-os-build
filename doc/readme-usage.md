@@ -148,7 +148,7 @@ toc: false
 > Als Basis Desktop Umgebung ist `LXDE` oder `LXQT` vorgesehen.
 > (All diese Voreinstellungen sind mit wenig aufwand anpassbar)
 
-### Konfiguration der OS
+### Konfiguration des OS
 - Beispielhaft soll hier `categories_standard` im Unterverzeichnis `/SCRIPTS`
   dienen welches vom Release hierhin entpackt werden muss
 - Es ist zu überprüfen, ob der Link `categories` auf dieses Verzeichnis zeigt.
