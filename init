@@ -13,7 +13,7 @@ source ./lib/func_chroot-handling
 source ./lib/func_layer-handling
 
 ## -------------------------------------------------------------------------- ##
-TARGET_NAME="matrixxx_00_lxde"
+TARGET_NAME="matrixxx_01_lxde-standard"
 
 ## see /SCRIPTS/categories/init
 #SELECTOR_ARRAY=("A" "B" "C" "D")

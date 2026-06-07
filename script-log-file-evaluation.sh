@@ -33,20 +33,13 @@ func_process(){ # arch="$1"
   echo -n > "${file_errors}"
   file_removed="log-file-evaluation-removed.md"
   echo -n > "${file_removed}"
-#  file_reinstalled="log-file-evaluation-reinstalled.md"
-#  echo -n > "${file_reinstalled}"
   for log_file in "${log_file_list[@]}"
   do
     echo "${log_file}"
-
     "${SCRIPT_PATH}"/perl/log-file-evaluation.pl \
       "${log_file}" "${file_errors}" "ERROR:" || exit 1
-
     "${SCRIPT_PATH}"/perl/log-file-evaluation.pl \
       "${log_file}" "${file_removed}" ", ([1-9][0-9]*) zu entfernen" || exit 1
-
-#    "${SCRIPT_PATH}"/perl/log-file-evaluation.pl \
-#      "${log_file}" "${file_reinstalled}" "erneut installiert" || exit 1
   done
 
   func_gen_html_with_pandoc
@@ -60,15 +53,12 @@ func_gen_html_with_pandoc(){
     echo "run ${cmd}:"
     [ -f "${file_errors}" ] && ${cmd} "${file_errors}" 2>/dev/null
     [ -f "${file_removed}" ] && ${cmd} "${file_removed}" 2>/dev/null
-#    [ -f "${file_reinstalled}" ] && ${cmd} "${file_reinstalled}" 2>/dev/null
   elif cmd=$(type -p pandoc) && [ -x "${cmd}" ]; then
     echo "run ${cmd}:"
     [ -f "${file_errors}" ] \
       && ${cmd} -f markdown -t html5 "${file_errors}" -o "${file_errors}.html"
     [ -f "${file_removed}" ] \
       && ${cmd} -f markdown -t html5 "${file_removed}" -o "${file_removed}.html"
-#    [ -f "${file_reinstalled}" ] \
-#      && ${cmd} -f markdown -t html5 "${file_reinstalled}" -o "${file_reinstalled}.html"
   fi
 }
 
